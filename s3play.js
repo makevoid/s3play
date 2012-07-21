@@ -29,9 +29,14 @@ function S3Play(){
     }
   })
 
-  this.songView = Ember.View.create({
-    templateName: 'song',
-    name: "not loaded"
+  this.songsView = Ember.View.create({
+    templateName: 'songs',
+    name: "not loaded",
+    songs: this.songs,
+    self: this,
+    change: function(evt){
+      self.change_song(evt.context)
+    }
   });
 
   this.init = function(){
@@ -39,6 +44,8 @@ function S3Play(){
     self = this
     $(function(){
       self.playerView.appendTo("#s3play")
+      self.songsView.replaceIn(".s3play_songs")
+
       setTimeout(
         function(){
           self.bind_ui()
@@ -76,6 +83,14 @@ function S3Play(){
   this.load_song = function(){
     file = this.current_song().get("file")
     $(this.audio).attr("src", "songs/"+file)
+  }
+
+  this.change_song = function(song){
+    this.pause()
+    idx = _(this.songs).indexOf(song)
+    this.current = idx
+    console.log(this.current_song())
+    this.play()
   }
 
   this.pause = function(){

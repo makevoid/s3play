@@ -17,8 +17,10 @@
       <a class="next" {{action "next"}} href="javascript:void(0)">>></a>
       <audio class='s3play_audio'></audio>
     </script>
-    <script type="text/x-handlebars" data-template-name="song">
-      <a href="javascript:void(0)">{{name}}</a>
+    <script type="text/x-handlebars" data-template-name="songs">
+      {{#each songs}}
+        <a href="javascript:void(0)" {{action "change"}}>{{name}}</a>
+      {{/each}}
     </script>
   </head>
   <body>
@@ -29,7 +31,7 @@
 
     </section>
     <h2>Songs</h2>
-    <section class="playlist songs">
+    <section class="s3play_songs playlist songs">
       loading...
     </section>
   </body>
