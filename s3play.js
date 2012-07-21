@@ -6,19 +6,19 @@ var Songs = [
 
 ]
 
-function S3Play(){
-  this.app = Em.Application.create();
-  this.songs = []
-  this.current = null
-  this.audio = null
-  this.state = null
-  this.states = [null, "loading", "playing", "paused"]
+S3Play = Em.Application.create({
+  songs: [],
+  current: Ember.object.create({ name: "not loaded", file: "test" }),
+  audio: null,
+  state: null,
+  states: [null, "loading", "playing", "paused"],
 
   // views
 
-  this.playerView = Ember.View.create({
+  playerView: Ember.View.create({
     templateName: 'player',
-    message: "ready",
+    song_nameBinding: "S3Play.current.song_name",
+    fileBinding: "S3Play.current.file",
     self: this,
     play_pause: function(evt){
       self.play_pause()
@@ -29,9 +29,9 @@ function S3Play(){
     next: function(evt){
       self.next()
     }
-  })
+  }),
 
-  this.songsView = Ember.View.create({
+  songsView: Ember.View.create({
     templateName: 'songs',
     name: "not loaded",
     songs: this.songs,
@@ -39,11 +39,11 @@ function S3Play(){
     change: function(evt){
       self.change_song(evt.context)
     }
-  });
+  }),
 
   // constructor
 
-  this.init = function(){
+  init: function(){
     this.load(Songs)
     self = this
     $(function(){
@@ -58,77 +58,80 @@ function S3Play(){
       )
       console.log("S3Play loaded songs")
     })
-  }
+  },
 
-  // ui
+  bind_ui: function(){
+    console.log("bind_ui")
+  },
+ //  // ui
 
-  this.bind_ui = function(){
-    this.audio = $(".s3play_audio").get(0)
-    window.audio = this.audio
-  }
+ //  this.bind_ui = function(){
+ //    this.audio = $(".s3play_audio").get(0)
+ //    window.audio = this.audio
+ //  }
 
-  // controls
+ //  // controls
 
-  this.play_pause = function(){
-    if (this.state == "playing")
-      this.pause()
-    else
-      this.play()
-  }
+ //  this.play_pause = function(){
+ //    if (this.state == "playing")
+ //      this.pause()
+ //    else
+ //      this.play()
+ //  }
 
-  this.play = function(){
-    if (!this.current)
-      this.current = 0
+ //  this.play = function(){
+ //    if (!this.current)
+ //      this.current = 0
 
-    this.load_song()
-    this.audio.play()
-    this.state = "playing"
-  }
+ //    this.load_song()
+ //    this.audio.play()
+ //    this.state = "playing"
+ //  }
 
-  this.change_song = function(song){
-    this.pause()
-    idx = _(this.songs).indexOf(song)
-    this.current = idx
-    this.play()
-  }
+ //  this.change_song = function(song){
+ //    this.pause()
+ //    idx = _(this.songs).indexOf(song)
+ //    this.current = idx
+ //    this.play()
+ //  }
 
-  this.pause = function(){
-    this.audio.pause()
-    this.state = "paused"
-  }
+ //  this.pause = function(){
+ //    this.audio.pause()
+ //    this.state = "paused"
+ //  }
 
-  this.next = function(){
-    this.pause()
-    this.current += 1
-    if (this.current >= this.songs.length)
-      this.current = 0
-    this.play()
-  }
+ //  this.next = function(){
+ //    this.pause()
+ //    this.current += 1
+ //    if (this.current >= this.songs.length)
+ //      this.current = 0
+ //    this.play()
+ //  }
 
-  this.prev = function(){
-    this.pause()
-    this.current -= 1
-    if (this.current <= -1)
-      this.current = this.songs.length-1
-    this.play()
-  }
+ //  this.prev = function(){
+ //    this.pause()
+ //    this.current -= 1
+ //    if (this.current <= -1)
+ //      this.current = this.songs.length-1
+ //    this.play()
+ //  }
 
   // loading
 
-  this.load = function(songs){
+  load: function(songs){
     var self = this
     songs.forEach(function(song) {
       self.songs.push(song)
     })
   }
 
- this.current_song = function() {
-    return this.songs[this.current]
-  }
+ // this.current_song = function() {
+ //    return this.songs[this.current]
+ //  }
 
-  this.load_song = function(){
-    file = this.current_song().get("file")
-    if ($(this.audio).attr("src") != file)
-      $(this.audio).attr("src", file)
-  }
-}
+ //  this.load_song = function(){
+ //    file = this.current_song().get("file")
+ //    if ($(this.audio).attr("src") != file)
+ //      $(this.audio).attr("src", file)
+ //  }
+})
