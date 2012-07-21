@@ -1,7 +1,9 @@
 var Songs = [
-  Ember.Object.create({ name: "Adebisi Shank - Logdrum", file: "adebisi_shank-logdrum.mp3" }),
-  Ember.Object.create({ name: "Aphex Twin - Avril 14th", file: "aphex_twin-avril_14th.mp3" }),
-  Ember.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "ronald_jenkees-disorganized_fun.mp3" })
+  Ember.Object.create({ name: "Adebisi Shank - Logdrum", file: "songs/adebisi_shank-logdrum.mp3" }),
+  Ember.Object.create({ name: "Aphex Twin - Avril 14th", file: "songs/aphex_twin-avril_14th.mp3" }),
+  Ember.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "songs/ronald_jenkees-disorganized_fun.mp3" }),
+  Ember.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
+
 ]
 
 function S3Play(){
@@ -39,6 +41,8 @@ function S3Play(){
     }
   });
 
+  // constructor
+
   this.init = function(){
     this.load(Songs)
     self = this
@@ -56,10 +60,14 @@ function S3Play(){
     })
   }
 
+  // ui
+
   this.bind_ui = function(){
     this.audio = $(".s3play_audio").get(0)
     window.audio = this.audio
   }
+
+  // controls
 
   this.play_pause = function(){
     if (this.state == "playing")
@@ -75,17 +83,6 @@ function S3Play(){
     this.load_song()
     this.audio.play()
     this.state = "playing"
-  }
-
-  this.current_song = function() {
-    return this.songs[this.current]
-  }
-
-  this.load_song = function(){
-    file = this.current_song().get("file")
-    path = "songs/"+file
-    if ($(this.audio).attr("src") != path)
-      $(this.audio).attr("src", path)
   }
 
   this.change_song = function(song){
@@ -116,6 +113,8 @@ function S3Play(){
     this.play()
   }
 
+  // loading
+
   this.load = function(songs){
     var self = this
     songs.forEach(function(song) {
@@ -123,7 +122,13 @@ function S3Play(){
     })
   }
 
-  this.display_songs = function(){
-    // self.songs.each
+ this.current_song = function() {
+    return this.songs[this.current]
+  }
+
+  this.load_song = function(){
+    file = this.current_song().get("file")
+    if ($(this.audio).attr("src") != file)
+      $(this.audio).attr("src", file)
   }
 }
