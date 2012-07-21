@@ -4,32 +4,45 @@ var Songs = [
   Ember.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "ronald_jenkees-disorganized_fun.mp3" })
 ]
 
-var playerView = Ember.View.create({
-  templateName: 'player',
-  message: "ready"
-})
-
-var songView = Ember.View.create({
-  templateName: 'song',
-  name: "not loaded"
-});
-
 function S3Play(){
+  this.app = Em.Application.create();
   this.songs = []
   this.current = null
   this.audio = null
   this.state = null
   this.states = [null, "loading", "playing", "paused"]
 
+  // views
+
+  this.playerView = Ember.View.create({
+    templateName: 'player',
+    message: "ready",
+    self: this,
+    play_pause: function(evt){
+      self.play_pause()
+    },
+    prev: function(evt){
+      self.prev()
+    },
+    next: function(evt){
+      self.next()
+    }
+  })
+
+  this.songView = Ember.View.create({
+    templateName: 'song',
+    name: "not loaded"
+  });
+
   this.init = function(){
     this.load(Songs)
     self = this
     $(function(){
-      playerView.appendTo("#s3play")
+      self.playerView.appendTo("#s3play")
       setTimeout(
         function(){
           self.bind_ui()
-          self.play()
+          // self.play()
         }, 0
       )
       console.log("S3Play loaded songs")
@@ -41,7 +54,7 @@ function S3Play(){
   }
 
   this.play_pause = function(){
-    if (state == "playing")
+    if (this.state == "playing")
       this.pause()
     else
       this.play()
@@ -52,8 +65,8 @@ function S3Play(){
       this.current = 0
 
     this.load_song()
-    console.log(this.audio)
     this.audio.play()
+    this.state = "playing"
   }
 
   this.current_song = function() {
@@ -67,6 +80,7 @@ function S3Play(){
 
   this.pause = function(){
     this.audio.pause()
+    this.state = "paused"
   }
 
   this.next = function(){
@@ -79,8 +93,12 @@ function S3Play(){
 
   this.load = function(songs){
     var self = this
-    _(songs).each(function(song) {
+    songs.forEach(function(song) {
       self.songs.push(song)
     })
+  }
+
+  this.display_songs = function(){
+    // self.songs.each
   }
 }
