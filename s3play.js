@@ -13,27 +13,46 @@ function S3Play(){
   this.states = [null, "loading", "playing", "paused"]
 
   this.init = function(){
-    this.bind_ui()
-
     this.load(Songs)
-    this.next()
-    console.log("S3Play loaded songs")
+    self = this
+    $(function(){
+      self.bind_ui()
+      self.play()
+      console.log("S3Play loaded songs")
+    })
   }
 
   this.bind_ui = function(){
-    this.audio = $("#s3play .player")
+    this.audio = $("#s3play audio").get(0)
   }
 
   this.play_pause = function(){
-
+    if (state == "playing")
+      this.pause()
+    else
+      this.play()
   }
 
   this.play = function(){
+    if (!this.current)
+      this.current = 0
 
+    this.load_song()
+    console.log(this.audio)
+    this.audio.play()
+  }
+
+  this.current_song = function() {
+    return this.songs[this.current]
+  }
+
+  this.load_song = function(){
+    file = this.current_song().get("file")
+    $(this.audio).attr("src", "songs/"+file)
   }
 
   this.pause = function(){
-
+    this.audio.pause()
   }
 
   this.next = function(){
