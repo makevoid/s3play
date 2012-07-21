@@ -4,6 +4,15 @@ var Songs = [
   Ember.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "ronald_jenkees-disorganized_fun.mp3" })
 ]
 
+var playerView = Ember.View.create({
+  templateName: 'player',
+  message: "ready"
+})
+
+var songView = Ember.View.create({
+  templateName: 'song',
+  name: "not loaded"
+});
 
 function S3Play(){
   this.songs = []
@@ -16,14 +25,19 @@ function S3Play(){
     this.load(Songs)
     self = this
     $(function(){
-      self.bind_ui()
-      self.play()
+      playerView.append("#s3play")
+      setTimeout(
+        function(){
+          self.bind_ui()
+          self.play()
+        }, 0
+      )
       console.log("S3Play loaded songs")
     })
   }
 
   this.bind_ui = function(){
-    this.audio = $("#s3play audio").get(0)
+    this.audio = $(".s3play_audio").get(0)
   }
 
   this.play_pause = function(){
