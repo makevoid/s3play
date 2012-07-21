@@ -10,20 +10,25 @@
       var s3play = new S3Play()
       s3play.init()
     </script>
+    <script type="text/x-handlebars" data-template-name="song">
+      <a href="javascript:void(0)"></a>
+    </script>
   </head>
   <body>
     <header>
       <h1>S3Play</h1>
     </header>
     <section class="player" id="s3play">
-      <div class="message">ready...</div>
-      <a class="prev" href="javascript:void(0)"><<</a>
-      <a class="play_pause" href="javascript:void(0)">></a>
-      <a class="next" href="javascript:void(0)">>></a>
-      <audio></audio>
+      <script type="text/x-handlebars" data-template-name="player">
+        <div class="message">ready...</div>
+        <a class="prev" href="javascript:void(0)"><<</a>
+        <a class="play_pause" href="javascript:void(0)">></a>
+        <a class="next" href="javascript:void(0)">>></a>
+        <audio></audio>
+      </script>
     </section>
     <h2>Songs</h2>
-    <section class="playlist">
+    <section class="playlist songs">
       loading...
     </section>
   </body>
