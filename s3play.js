@@ -25,7 +25,7 @@ function S3Play(){
     this.load(Songs)
     self = this
     $(function(){
-      playerView.append("#s3play")
+      playerView.appendTo("#s3play")
       setTimeout(
         function(){
           self.bind_ui()
