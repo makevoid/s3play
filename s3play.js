@@ -89,7 +89,6 @@ function S3Play(){
     this.pause()
     idx = _(this.songs).indexOf(song)
     this.current = idx
-    console.log(this.current_song())
     this.play()
   }
 
@@ -99,11 +98,19 @@ function S3Play(){
   }
 
   this.next = function(){
-
+    this.pause()
+    this.current += 1
+    if (this.current >= this.songs.length)
+      this.current = 0
+    this.play()
   }
 
   this.prev = function(){
-
+    this.pause()
+    this.current -= 1
+    if (this.current <= -1)
+      this.current = this.songs.length-1
+    this.play()
   }
 
   this.load = function(songs){
