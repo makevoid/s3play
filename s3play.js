@@ -58,6 +58,7 @@ function S3Play(){
 
   this.bind_ui = function(){
     this.audio = $(".s3play_audio").get(0)
+    window.audio = this.audio
   }
 
   this.play_pause = function(){
@@ -82,7 +83,9 @@ function S3Play(){
 
   this.load_song = function(){
     file = this.current_song().get("file")
-    $(this.audio).attr("src", "songs/"+file)
+    path = "songs/"+file
+    if ($(this.audio).attr("src") != path)
+      $(this.audio).attr("src", path)
   }
 
   this.change_song = function(song){
