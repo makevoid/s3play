@@ -25,13 +25,13 @@ S3Play = Em.Object.create({
     song_nameBinding: "S3Play.current.name",
     fileBinding: "S3Play.current.file",
     play_pause: function(evt){
-      self.play_pause()
+      S3Play.play_pause()
     },
     prev: function(evt){
-      self.prev()
+      S3Play.prev()
     },
     next: function(evt){
-      self.next()
+      S3Play.next()
     }
   }),
 
@@ -39,7 +39,7 @@ S3Play = Em.Object.create({
     templateName: 'songs',
     songsBinding: 'S3Play.songs',
     change: function(evt){
-      self.change_song(evt.context)
+      S3Play.change_song(evt.context)
     }
   }),
 
@@ -47,7 +47,7 @@ S3Play = Em.Object.create({
 
   init: function(){
     this.load(Songs)
-    self = this
+    var self = this
     $(function(){
       self.playerView.appendTo("#s3play")
       self.songsView.replaceIn(".s3play_songs")
@@ -81,33 +81,36 @@ S3Play = Em.Object.create({
     this.state = "playing"
   },
 
- //  this.change_song = function(song){
- //    this.pause()
- //    idx = _(this.songs).indexOf(song)
- //    this.current = idx
- //    this.play()
- //  }
-
   pause: function(){
     this.audio.pause()
     this.state = "paused"
   },
 
- //  this.next = function(){
- //    this.pause()
- //    this.current += 1
- //    if (this.current >= this.songs.length)
- //      this.current = 0
- //    this.play()
- //  }
+  next: function(){
+    index = this.index()
+    console.log(index)
+    index += 1
+    if (index >= this.songs.length)
+      index = 0
+    this.change_song(this.songs[index])
+  },
 
- //  this.prev = function(){
- //    this.pause()
- //    this.current -= 1
- //    if (this.current <= -1)
- //      this.current = this.songs.length-1
- //    this.play()
- //  }
+  prev: function(){
+    index = this.index()
+    index -= 1
+    if (index <= -1)
+      index = this.songs.length-1
+    this.change_song(this.songs[index])
+  },
+
+  change_song: function(song){
+    this.pause()
+    this.set_current(song)
+    var self = this
+    setTimeout(function(){
+      self.play()
+    }, 0)
+  },
 
   // loading
 
@@ -116,10 +119,20 @@ S3Play = Em.Object.create({
     songs.forEach(function(song) {
       self.songs.push(song)
     })
-    // this.current.set(this.songs[0])
-    this.current.set("name",  this.songs[0].name)
-    this.current.set("file",  this.songs[0].file)
+    this.set_current(songs[0])
+  },
+
+  set_current: function(song){
+    this.current.set("name",  song.name)
+    this.current.set("file",  song.file)
+  },
+
+  index: function(){
+    list = _(this.songs).map(function(s){ return s.name })
+    return _(list).indexOf(this.current.name)
   }
+
+
 
 })
 
