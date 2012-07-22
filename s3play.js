@@ -9,7 +9,9 @@ var Songs = [
 
 ]
 
-S3Play = Em.Application.create({
+S3Play = Em.Application.create({})
+
+S3Play2 = Em.Object.create({
   songs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
@@ -20,9 +22,8 @@ S3Play = Em.Application.create({
 
   playerView: Em.View.create({
     templateName: 'player',
-    song_nameBinding: "S3Play.current.song_name",
-    fileBinding: "S3Play.current.file",
-    self: this,
+    song_nameBinding: "S3Play2.current.name",
+    fileBinding: "S3Play2.current.file",
     play_pause: function(evt){
       self.play_pause()
     },
@@ -62,7 +63,8 @@ S3Play = Em.Application.create({
   },
 
   bind_ui: function(){
-    console.log("bind_ui")
+    this.audio = $(".s3play_audio").get(0)
+    window.audio = this.audio
   },
  //  // ui
 
@@ -71,18 +73,22 @@ S3Play = Em.Application.create({
  //    window.audio = this.audio
  //  }
 
- //  // controls
+  // controls
 
- //  this.play_pause = function(){
- //    if (this.state == "playing")
- //      this.pause()
- //    else
- //      this.play()
- //  }
+  play_pause: function(){
+    if (this.state == "playing")
+      this.pause()
+    else
+      this.play()
+  },
+
+  play: function(){
+    this.audio.play()
+    this.state = "playing"
+  },
 
  //  this.play = function(){
- //    if (!this.current)
- //      this.current = 0
+
 
  //    this.load_song()
  //    this.audio.play()
@@ -96,10 +102,10 @@ S3Play = Em.Application.create({
  //    this.play()
  //  }
 
- //  this.pause = function(){
- //    this.audio.pause()
- //    this.state = "paused"
- //  }
+  pause: function(){
+    this.audio.pause()
+    this.state = "paused"
+  },
 
  //  this.next = function(){
  //    this.pause()
@@ -124,6 +130,9 @@ S3Play = Em.Application.create({
     songs.forEach(function(song) {
       self.songs.push(song)
     })
+    // this.current.set(this.songs[0])
+    this.current.set("name",  this.songs[0].name)
+    this.current.set("file",  this.songs[0].file)
   }
 
  // this.current_song = function() {
@@ -136,3 +145,5 @@ S3Play = Em.Application.create({
  //      $(this.audio).attr("src", file)
  //  }
 })
+
+S3Play2.init()

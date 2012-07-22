@@ -2,6 +2,19 @@
   box-sizing: border-box;
 }
 
+a {
+  text-decoration: none;
+}
+
 .playlist a {
   display: block;
+}
+
+.player a {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.player a:hover {
+  opacity: 0.6;
 }
