@@ -9,14 +9,29 @@ var Songs = [
 
 ]
 
+var s3_bucket_url = "http://s3play.s3.amazonaws.com"
+$.get("http://jscrape.it:9393/q/"+encodeURIComponent(s3_bucket_url), function(data){
+  window.data = data
+  contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
+  files = _(contents).map(function(elem){
+    key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
+    return key.childNodes[0].wholeText
+  })
+
+  _(files).each(function(file){
+    name = file.replace(/\.\w+$/, '')
+    S3Play.songs.push(Em.Object.create({ name: name, file: s3_bucket_url+"/"+file }))
+    S3Play.songsView.rerender()
+  })
+})
+
 S3PlayEmberApp = Em.Application.create({})
 
 S3Play = Em.Object.create({
   songs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
-  state: null,
-  states: [null, "loading", "playing", "paused"],
+  playing: false,
 
   // views
 
@@ -24,6 +39,7 @@ S3Play = Em.Object.create({
     templateName: 'player',
     song_nameBinding: "S3Play.current.name",
     fileBinding: "S3Play.current.file",
+    playingBinding: "S3Play.playing",
     play_pause: function(evt){
       S3Play.play_pause()
     },
@@ -33,7 +49,6 @@ S3Play = Em.Object.create({
     next: function(evt){
       S3Play.next()
     }
-    playing: false,
   }),
 
   songsView: Em.View.create({
@@ -71,25 +86,21 @@ S3Play = Em.Object.create({
   // controls
 
   play_pause: function(){
-    if (this.state == "playing")
-      this.pause()
-    else
-      this.play()
+    (this.playing) ? this.pause() : this.play()
   },
 
   play: function(){
     this.audio.play()
-    this.state = "playing"
+    this.set("playing", true)
   },
 
   pause: function(){
     this.audio.pause()
-    this.state = "paused"
+    this.set("playing", false)
   },
 
   next: function(){
     index = this.index()
-    console.log(index)
     index += 1
     if (index >= this.songs.length)
       index = 0
@@ -132,8 +143,6 @@ S3Play = Em.Object.create({
     list = _(this.songs).map(function(s){ return s.name })
     return _(list).indexOf(this.current.name)
   }
-
-
 
 })
 

@@ -33,7 +33,10 @@ define ui
       }
 
 
-...
+init method is called automatically...
+
+
+
 
 
 
