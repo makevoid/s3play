@@ -33,6 +33,7 @@ S3Play = Em.Object.create({
     next: function(evt){
       S3Play.next()
     }
+    playing: false,
   }),
 
   songsView: Em.View.create({

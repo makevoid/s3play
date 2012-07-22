@@ -11,10 +11,10 @@
       <div class="song_name">{{song_name}}</div>
       <a class="prev" {{action "prev"}} href="javascript:void(0)"><<</a>
       <a class="play_pause" {{action "play_pause"}} href="javascript:void(0)">
-        >
+        {{#if playing}} || {{else}} > {{/if}}
       </a>
       <a class="next" {{action "next"}} href="javascript:void(0)">>></a>
-      <audio controls class='s3play_audio' {{bindAttr src="file"}}></audio>
+      <audio  class='s3play_audio' {{bindAttr src="file"}}></audio>
     </script>
     <script type="text/x-handlebars" data-template-name="songs">
       <h1>Songs</h1>
