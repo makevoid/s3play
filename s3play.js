@@ -6,32 +6,18 @@ var Songs = [
   Em.Object.create({ name: "Brontide - Sans Souci", file: "songs/brontide-sans-souci.mp3" }),
   Em.Object.create({ name: "edIT - Screening Phone Calls", file: "songs/edit-screening-phone-calls.mp3" }),
   Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
-
 ]
 
-var s3_bucket_url = "http://s3play.s3.amazonaws.com"
-$.get("http://jscrape.it:9393/q/"+encodeURIComponent(s3_bucket_url), function(data){
-  window.data = data
-  contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
-  files = _(contents).map(function(elem){
-    key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
-    return key.childNodes[0].wholeText
-  })
-
-  _(files).each(function(file){
-    name = file.replace(/\.\w+$/, '')
-    S3Play.songs.push(Em.Object.create({ name: name, file: s3_bucket_url+"/"+file }))
-    S3Play.songsView.rerender()
-  })
-})
 
 S3PlayEmberApp = Em.Application.create({})
 
 S3Play = Em.Object.create({
+  s3_bucket_url: "http://s3play.s3.amazonaws.com",
   songs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
   playing: false,
+
 
   // views
 
@@ -74,6 +60,7 @@ S3Play = Em.Object.create({
         }, 0
       )
     })
+    this.s3_load()
   },
 
   // ui
@@ -142,6 +129,25 @@ S3Play = Em.Object.create({
   index: function(){
     list = _(this.songs).map(function(s){ return s.name })
     return _(list).indexOf(this.current.name)
+  },
+
+  // S3
+
+  s3_load: function(){
+    var self = this
+    $.get("http://jscrape.it:9393/q/"+encodeURIComponent(this.s3_bucket_url), function(data){
+      contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
+      files = _(contents).map(function(elem){
+        key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
+        return key.childNodes[0].wholeText
+      })
+
+      _(files).each(function(file){
+        name = file.replace(/\.\w+$/, '')
+        S3Play.songs.push(Em.Object.create({ name: name, file: self.s3_bucket_url+"/"+file }))
+        S3Play.songsView.rerender()
+      })
+    })
   }
 
 })
