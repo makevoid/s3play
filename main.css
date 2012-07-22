@@ -1,9 +1,31 @@
 * {
   box-sizing: border-box;
+  margin: 0;
+}
+
+html, body {
+  background: #AAA -webkit-linear-gradient(bottom, #AAA 10%, #DDD 80%);
+  height: 100%;
+  color: #111;
 }
 
 a {
   text-decoration: none;
+  opacity: 0.8;
+  color: #E00;
+}
+
+a:hover {
+  opacity: 1;
+}
+
+.content {
+  margin: 2.5% auto;
+  width: 95%;
+}
+
+header {
+  margin: 0 0 10px 0;
 }
 
 .playlist a {
@@ -15,6 +37,28 @@ a {
   font-weight: bold;
 }
 
-.player a:hover {
-  opacity: 0.6;
+.player a.play_pause {
+  font-size:  27px;
+  margin: 0 6px 0 10px;
+}
+
+.player a.playing {
+  margin: 0 -8px 0 3px;
+}
+
+h1 {
+  font-size: 100%;
+}
+
+.songs {
+  margin: 10px 0 0 0;
+}
+
+.songs h1 {
+  font-size: 70%;
+}
+
+footer {
+  margin: 30px 0 0 0;
+  font-size: 60%;
 }

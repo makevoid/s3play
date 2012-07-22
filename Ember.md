@@ -1,4 +1,7 @@
 # Ember.js Presentation
+-                                             note: display 20 lines
+
+
 
 ### Setup
 
@@ -8,6 +11,7 @@
 
 
 
+build a basic application
 
 
 
@@ -15,9 +19,17 @@
 
 
 
--                                             note: 20 lines
+
 
 ### Views and Templates (handlebars)
+
+handlebars
+
+
+    <script type="text/x-handlebars" data-template-name="player">
+
+    </script>
+
 
 define ui
 
@@ -80,14 +92,42 @@ songs
 
 
 
+### Actions
+
+    <a class="play_pause" {{action "play_pause"}} href="javascript:void(0)">
+
+
+
+
+
+
+
+
+
+
 
 ### Models and Bindings
 
-play button
+- play/pause button
+- current track
+  - name
+  - file
+
+
+object.set("key", value)
+
+object.get("key") //=> "value"
 
 
 
+Em.Object.create({
+  attrBinding: "YourApp.method",
 
+  //..
+
+
+  fooBinding: "YourApp.antani.foo"
+})
 
 
 
@@ -112,7 +152,8 @@ configs:
 
 ### Links
 
-http://emberjs.com/documentation/
+- http://emberjs.com/documentation/
+- http://docs.emberjs.com/
 
 
 
@@ -129,9 +170,13 @@ http://emberjs.com/documentation/
 
 
 
+
+
+
+
 ### Thanks
 
 
 @makevoid
 
-github.com/makevoid/s3
+this project: github.com/makevoid/s3play

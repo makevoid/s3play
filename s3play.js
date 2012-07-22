@@ -121,6 +121,8 @@ S3Play = Em.Object.create({
     this.set_current(songs[0])
   },
 
+  // utils
+
   set_current: function(song){
     this.current.set("name",  song.name)
     this.current.set("file",  song.file)
@@ -151,5 +153,3 @@ S3Play = Em.Object.create({
   }
 
 })
-
-// S3Play.init() // called automatically

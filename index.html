@@ -9,11 +9,11 @@
     <script src="s3play.js" type="text/javascript"></script>
     <script type="text/x-handlebars" data-template-name="player">
       <div class="song_name">{{song_name}}</div>
-      <a class="prev" {{action "prev"}} href="javascript:void(0)"><<</a>
-      <a class="play_pause" {{action "play_pause"}} href="javascript:void(0)">
-        {{#if playing}} || {{else}} > {{/if}}
+      <a class="prev" {{action "prev"}} href="javascript:void(0)"> ≪ </a>
+      <a class="play_pause" {{bindAttr class="playing"}}  {{action "play_pause"}} href="javascript:void(0)">
+        {{#if playing}} ▍▍ {{else}} ▶ {{/if}}
       </a>
-      <a class="next" {{action "next"}} href="javascript:void(0)">>></a>
+      <a class="next" {{action "next"}} href="javascript:void(0)"> ≫ </a>
       <audio  class='s3play_audio' {{bindAttr src="file"}}></audio>
     </script>
     <script type="text/x-handlebars" data-template-name="songs">
@@ -24,12 +24,17 @@
     </script>
   </head>
   <body>
-    <header>
-      <h1>S3Play</h1>
-    </header>
-    <section class="player" id="s3play"></section>
-    <section class="s3play_songs playlist songs">
-      loading...
-    </section>
+    <div class="content">
+      <header>
+        <h1>S3Play</h1>
+      </header>
+      <section class="player" id="s3play"></section>
+      <section class="s3play_songs playlist songs">
+        loading...
+      </section>
+      <footer>
+        Source at <a href='https//github.com/makevoid/s3play'>github/makevoid/s3play</a>
+      </footer>
+    </div>
   </body>
 </html>
