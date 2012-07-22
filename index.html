@@ -15,6 +15,7 @@
       <audio class='s3play_audio' {{bindAttr src="file"}}></audio>
     </script>
     <script type="text/x-handlebars" data-template-name="songs">
+      <h1>Songs</h1>
       {{#each songs}}
         <a href="javascript:void(0)" {{action "change"}}>{{name}}</a>
       {{/each}}
@@ -25,9 +26,7 @@
       <h1>S3Play</h1>
     </header>
     <section class="player" id="s3play">
-
     </section>
-    <h2>Songs</h2>
     <section class="s3play_songs playlist songs">
       loading...
     </section>

@@ -1,21 +1,24 @@
 var Songs = [
-  Ember.Object.create({ name: "Adebisi Shank - Logdrum", file: "songs/adebisi_shank-logdrum.mp3" }),
-  Ember.Object.create({ name: "Aphex Twin - Avril 14th", file: "songs/aphex_twin-avril_14th.mp3" }),
-  Ember.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "songs/ronald_jenkees-disorganized_fun.mp3" }),
-  Ember.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
+  // Em.Object.create({ name: "Adebisi Shank - Logdrum", file: "songs/adebisi_shank-logdrum.mp3" }),
+  //  Em.Object.create({ name: "Aphex Twin - Avril 14th", file: "songs/aphex_twin-avril_14th.mp3" }),
+  //  Em.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "songs/ronald_jenkees-disorganized_fun.mp3" }),
+  Em.Object.create({ name: "Ratatat - One", file: "songs/ratatat-one.mp3" }),
+  Em.Object.create({ name: "Brontide - Sans Souci", file: "songs/brontide-sans-souci.mp3" }),
+  Em.Object.create({ name: "edIT - Screening Phone Calls", file: "songs/edit-screening-phone-calls.mp3" }),
+  Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
 
 ]
 
 S3Play = Em.Application.create({
   songs: [],
-  current: Ember.object.create({ name: "not loaded", file: "test" }),
+  current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
   state: null,
   states: [null, "loading", "playing", "paused"],
 
   // views
 
-  playerView: Ember.View.create({
+  playerView: Em.View.create({
     templateName: 'player',
     song_nameBinding: "S3Play.current.song_name",
     fileBinding: "S3Play.current.file",
@@ -31,7 +34,7 @@ S3Play = Em.Application.create({
     }
   }),
 
-  songsView: Ember.View.create({
+  songsView: Em.View.create({
     templateName: 'songs',
     name: "not loaded",
     songs: this.songs,
@@ -49,14 +52,12 @@ S3Play = Em.Application.create({
     $(function(){
       self.playerView.appendTo("#s3play")
       self.songsView.replaceIn(".s3play_songs")
-
       setTimeout(
         function(){
           self.bind_ui()
           // self.play()
         }, 0
       )
-      console.log("S3Play loaded songs")
     })
   },
 
