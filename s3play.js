@@ -9,9 +9,9 @@ var Songs = [
 
 ]
 
-S3Play = Em.Application.create({})
+S3PlayEmberApp = Em.Application.create({})
 
-S3Play2 = Em.Object.create({
+S3Play = Em.Object.create({
   songs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
@@ -22,8 +22,8 @@ S3Play2 = Em.Object.create({
 
   playerView: Em.View.create({
     templateName: 'player',
-    song_nameBinding: "S3Play2.current.name",
-    fileBinding: "S3Play2.current.file",
+    song_nameBinding: "S3Play.current.name",
+    fileBinding: "S3Play.current.file",
     play_pause: function(evt){
       self.play_pause()
     },
@@ -37,9 +37,7 @@ S3Play2 = Em.Object.create({
 
   songsView: Em.View.create({
     templateName: 'songs',
-    name: "not loaded",
-    songs: this.songs,
-    self: this,
+    songsBinding: 'S3Play.songs',
     change: function(evt){
       self.change_song(evt.context)
     }
@@ -62,16 +60,12 @@ S3Play2 = Em.Object.create({
     })
   },
 
+  // ui
+
   bind_ui: function(){
     this.audio = $(".s3play_audio").get(0)
     window.audio = this.audio
   },
- //  // ui
-
- //  this.bind_ui = function(){
- //    this.audio = $(".s3play_audio").get(0)
- //    window.audio = this.audio
- //  }
 
   // controls
 
@@ -86,14 +80,6 @@ S3Play2 = Em.Object.create({
     this.audio.play()
     this.state = "playing"
   },
-
- //  this.play = function(){
-
-
- //    this.load_song()
- //    this.audio.play()
- //    this.state = "playing"
- //  }
 
  //  this.change_song = function(song){
  //    this.pause()
@@ -135,15 +121,6 @@ S3Play2 = Em.Object.create({
     this.current.set("file",  this.songs[0].file)
   }
 
- // this.current_song = function() {
- //    return this.songs[this.current]
- //  }
-
- //  this.load_song = function(){
- //    file = this.current_song().get("file")
- //    if ($(this.audio).attr("src") != file)
- //      $(this.audio).attr("src", file)
- //  }
 })
 
-S3Play2.init()
+// S3Play.init() // called automatically
