@@ -8,9 +8,9 @@ var Songs = [
 ]
 
 
-S3PlayEmberApp = Em.Application.create({})
+var S3PlayEmberApp = Em.Application.create({})
 
-S3Play = Em.Object.create({
+var S3Play = Em.Object.create({
   s3_bucket_url: "http://s3play.s3.amazonaws.com",
   songs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),

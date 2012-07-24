@@ -19,9 +19,9 @@ build a basic application
 
 
 
-S3PlayEmberApp = Em.Application.create({})
+var S3PlayEmberApp = Em.Application.create({})
 
-S3Play = Em.Object.create({})
+var S3Play = Em.Object.create({})
 
 
 
@@ -51,7 +51,7 @@ handlebars
 
 define ui
 
-    yourApp = Em.Application.create({
+    var yourApp = Em.Application.create({
       yourView: Em.View.create({
         templateName: 'player',
         attribute: "value"
@@ -98,13 +98,14 @@ init method is called automatically...
 
 
     <script type="text/x-handlebars" data-template-name="player">
-      <div class="song_name">{{song_name}}</div>
       <a class="prev" {{action "prev"}} href="javascript:void(0)"> ≪ </a>
       <a class="play_pause" {{bindAttr class="playing"}}  {{action "play_pause"}} href="javascript:void(0)">
         {{#if playing}} ▍▍ {{else}} ▶ {{/if}}
       </a>
       <a class="next" {{action "next"}} href="javascript:void(0)"> ≫ </a>
       <audio  class='s3play_audio' {{bindAttr src="file"}}></audio>
+      <div class="song_name">{{song_name}}</div>
+      <input class="current_time" type="range" {{action "set_current_time" on="change"}} value=0></type>
     </script>
     <script type="text/x-handlebars" data-template-name="songs">
       <h1>Songs</h1>
@@ -147,7 +148,6 @@ init method is called automatically...
 
 
     S3Play = Em.Object.create({
-      s3_bucket_url: "http://s3play.s3.amazonaws.com",
       songs: [],
       current: Em.Object.create({ name: "not loaded", file: "test" }),
       audio: null,
@@ -180,6 +180,9 @@ playerView
       },
       next: function(evt){
         S3Play.next()
+      },
+      set_current_time: function(evt){
+        S3Play.set_current_time(evt)
       }
     }),
 
@@ -218,20 +221,18 @@ songs
 #### HTML
 
 
-      <body>
-        <div class="content">
-          <header>
-            <h1>S3Play</h1>
-          </header>
-          <section class="player" id="s3play"></section>
-          <section class="s3play_songs playlist songs">
-            loading...
-          </section>
-          <footer>
-            Source at <a href='https//github.com/makevoid/s3play'>github/makevoid/s3play</a>
-          </footer>
-        </div>
-
+    <div class="content">
+      <header>
+        <h1>S3Play</h1>
+      </header>
+      <section class="player" id="s3play"></section>
+      <section class="s3play_songs playlist songs">
+        loading...
+      </section>
+      <footer>
+        source: <a href='https//github.com/makevoid/s3play'>github/makevoid/s3play</a>
+      </footer>
+    </div>
 
 
 
@@ -308,7 +309,6 @@ Em.Object.create({
 ### Logic
 
 
-
     // loading
 
     load: function(songs){
@@ -327,10 +327,9 @@ Em.Object.create({
     },
 
     index: function(){
-      list = _(this.songs).map(function(s){ return s.name })
+      var list = _(this.songs).map(function(s){ return s.name })
       return _(list).indexOf(this.current.name)
     },
-
 
 
 
@@ -383,14 +382,14 @@ search for file names
     s3_load: function(){
       var self = this
       $.get("http://jscrape.it:9393/q/"+encodeURIComponent(this.s3_bucket_url), function(data){
-        contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
-        files = _(contents).map(function(elem){
-          key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
+        var contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
+        var files = _(contents).map(function(elem){
+          var key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
           return key.childNodes[0].wholeText
         })
 
         _(files).each(function(file){
-          name = file.replace(/\.\w+$/, '')
+          var name = file.replace(/\.\w+$/, '')
           S3Play.songs.push(Em.Object.create({ name: name, file: self.s3_bucket_url+"/"+file }))
           S3Play.songsView.rerender()
         })
