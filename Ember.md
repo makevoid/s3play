@@ -7,7 +7,7 @@
 
     Em = Ember
 
-    yourApp = Em.Application.create({})
+    var yourApp = Em.Application.create({})
 
 
 
