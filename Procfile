@@ -1,0 +1,2 @@
+server: rackup
+livereload: guard

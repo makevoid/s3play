@@ -14,7 +14,7 @@ html, body {
   color: #111;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  font-size: 125%;
+  font-size: 110%;
   text-shadow: -1px 0px 0px #AAA, 1px 1px 1px #FFF;
   font-family: Georgia;
 }
@@ -48,7 +48,7 @@ header {
 .player {
   background: #AAA -webkit-linear-gradient(bottom, #AAA 10%, #EEE 90%);
   border-radius: 18px;
-  padding: 1% 2% 1%;
+  padding: 2% 2% 2%;
   border: 1px solid #777;
   box-shadow: 0px -2px 20px #FFF;
 }
@@ -59,12 +59,15 @@ header {
 }
 
 .player a.play_pause {
-  font-size:  27px;
+  font-size:  22px;
   margin: 0 6px 0 10px;
+  position: relative;
+  top: 2px;
 }
 
 .player a.playing {
-  margin: 0 -8px 0 3px;
+  margin: 0 -12px 0 3px;
+  line-height: 27px;
 }
 
 h1 {
@@ -91,7 +94,7 @@ h1 {
 
 .songs a {
   background: #AAA -webkit-linear-gradient(bottom, #AAA 30%, #DDD 90%);
-  padding: 0.6% 2%;
+  padding: 1.2% 2%;
 }
 
 .song_name {
