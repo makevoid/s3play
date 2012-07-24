@@ -67,7 +67,10 @@ S3Play = Em.Object.create({
 
   bind_ui: function(){
     this.audio = $(".s3play_audio").get(0)
-    window.audio = this.audio
+    var self = this
+    $(".s3play_audio").on("ended", function(){
+      self.next()
+    })
   },
 
   // controls
