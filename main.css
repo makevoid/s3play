@@ -1,18 +1,28 @@
 * {
   box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+.clear {
+  clear: both;
 }
 
 html, body {
-  background: #AAA -webkit-linear-gradient(bottom, #AAA 10%, #DDD 80%);
+  background: -webkit-linear-gradient(top, #AAA 10%, #777 90% );
   height: 100%;
   color: #111;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-size: 120%;
 }
 
 a {
   text-decoration: none;
   opacity: 0.8;
   color: #E00;
+  color: #11E;
+  color: #050;
 }
 
 a:hover {
@@ -25,11 +35,19 @@ a:hover {
 }
 
 header {
-  margin: 0 0 10px 0;
+  margin: 0 0 3px 0;
 }
 
 .playlist a {
   display: block;
+}
+
+.player {
+  background: #AAA -webkit-linear-gradient(bottom, #AAA 10%, #EEE 90%);
+  border-radius: 10px;
+  padding: 0.7% 2% 1%;
+  border: 1px solid #777;
+  box-shadow: 0px -2px 20px #FFF;
 }
 
 .player a {
@@ -47,18 +65,37 @@ header {
 }
 
 h1 {
-  font-size: 100%;
+  font-size: 90%;
+  opacity: 0.7;
 }
 
 .songs {
   margin: 10px 0 0 0;
+  background: #AAA -webkit-linear-gradient(bottom, #999 10%, #DDD 90%);
+  box-shadow:  0px 1px 3px #FFF, 0px 2px 20px #FFF;
+  border: 1px solid #777;
+  border-radius: 10px;
+  padding: 1% 0 2%;
 }
 
 .songs h1 {
   font-size: 70%;
+  opacity: 0.5;
+  padding: 0 2%;
+}
+
+.songs a {
+  background: #AAA -webkit-linear-gradient(bottom, #AAA 10%, #DDD 90%);
+  padding: 0.4% 2%;
+}
+
+.song_name {
+  display: inline;
+  margin: 0 0 0 2%;
 }
 
 footer {
   margin: 30px 0 0 0;
   font-size: 60%;
+  text-align: right;
 }
