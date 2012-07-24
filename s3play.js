@@ -3,7 +3,6 @@ var Songs = [
   //  Em.Object.create({ name: "Aphex Twin - Avril 14th", file: "songs/aphex_twin-avril_14th.mp3" }),
   //  Em.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "songs/ronald_jenkees-disorganized_fun.mp3" }),
   Em.Object.create({ name: "Ratatat - One", file: "songs/ratatat-one.mp3" }),
-  Em.Object.create({ name: "Brontide - Sans Souci", file: "songs/brontide-sans-souci.mp3" }),
   Em.Object.create({ name: "edIT - Screening Phone Calls", file: "songs/edit-screening-phone-calls.mp3" }),
   Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
 ]
