@@ -47,7 +47,7 @@ header {
 
 .player {
   background: #AAA -webkit-linear-gradient(bottom, #AAA 10%, #EEE 90%);
-  border-radius: 10px;
+  border-radius: 18px;
   padding: 1% 2% 1%;
   border: 1px solid #777;
   box-shadow: 0px -2px 20px #FFF;
@@ -98,6 +98,10 @@ h1 {
   display: inline;
   margin: 0 0 0 2%;
   font-size: 90%;
+}
+
+input.current_time {
+  margin: 0 0 0 2%;
 }
 
 footer {

@@ -15,6 +15,7 @@
       <a class="next" {{action "next"}} href="javascript:void(0)"> ≫ </a>
       <audio  class='s3play_audio' {{bindAttr src="file"}}></audio>
       <div class="song_name">{{song_name}}</div>
+      <input class="current_time" type="range" {{action "set_current_time" on="change"}} value=0></type>
     </script>
     <script type="text/x-handlebars" data-template-name="songs">
       <h1>Songs</h1>

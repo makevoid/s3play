@@ -33,6 +33,9 @@ S3Play = Em.Object.create({
     },
     next: function(evt){
       S3Play.next()
+    },
+    set_current_time: function(evt){
+      S3Play.set_current_time(evt)
     }
   }),
 
@@ -70,6 +73,9 @@ S3Play = Em.Object.create({
     $(".s3play_audio").on("ended", function(){
       self.next()
     })
+    this.audio.addEventListener('timeupdate', function(){
+      self.update_slider_position()
+    })
   },
 
   // controls
@@ -89,7 +95,7 @@ S3Play = Em.Object.create({
   },
 
   next: function(){
-    index = this.index()
+    var index = this.index()
     index += 1
     if (index >= this.songs.length)
       index = 0
@@ -97,12 +103,29 @@ S3Play = Em.Object.create({
   },
 
   prev: function(){
-    index = this.index()
+    var index = this.index()
     index -= 1
     if (index <= -1)
       index = this.songs.length-1
     this.change_song(this.songs[index])
   },
+
+  // slider control
+
+  set_current_time: function(evt){
+    var time = $(evt.target).val()
+    this.audio.currentTime = time
+  },
+
+  update_slider_position: function(evt){
+    var seekbar = $("input.current_time").get(0)
+    var lastBuffered = this.audio.buffered.end(this.audio.buffered.length-1);
+    seekbar.max = lastBuffered;
+    seekbar.value = this.audio.currentTime;
+  },
+
+
+  // change song
 
   change_song: function(song){
     this.pause()
@@ -131,7 +154,7 @@ S3Play = Em.Object.create({
   },
 
   index: function(){
-    list = _(this.songs).map(function(s){ return s.name })
+    var list = _(this.songs).map(function(s){ return s.name })
     return _(list).indexOf(this.current.name)
   },
 
@@ -140,14 +163,14 @@ S3Play = Em.Object.create({
   s3_load: function(){
     var self = this
     $.get("http://jscrape.it:9393/q/"+encodeURIComponent(this.s3_bucket_url), function(data){
-      contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
-      files = _(contents).map(function(elem){
-        key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
+      var contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
+      var files = _(contents).map(function(elem){
+        var key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
         return key.childNodes[0].wholeText
       })
 
       _(files).each(function(file){
-        name = file.replace(/\.\w+$/, '')
+        var name = file.replace(/\.\w+$/, '')
         S3Play.songs.push(Em.Object.create({ name: name, file: self.s3_bucket_url+"/"+file }))
         S3Play.songsView.rerender()
       })
