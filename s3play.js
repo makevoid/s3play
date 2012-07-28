@@ -169,11 +169,12 @@ var S3Play = Em.Object.create({
         return key.childNodes[0].wholeText
       })
 
-      _(files).each(function(file){
+      files.every(function(file, idx){
         var name = file.replace(/\.\w+$/, '')
         S3Play.songs.push(Em.Object.create({ name: name, file: self.s3_bucket_url+"/"+file }))
-        S3Play.songsView.rerender()
+        return idx < 300 // prevent browser crash
       })
+      S3Play.songsView.rerender()
     })
   }
 
