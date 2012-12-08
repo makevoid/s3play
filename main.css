@@ -24,10 +24,11 @@ html, body {
 
 a {
   text-decoration: none;
-  opacity: 0.83;
+  opacity: 0.9;
   color: #11E;
   color: #050;
   color: #C00;
+  color: #A00;
 }
 
 a:hover {

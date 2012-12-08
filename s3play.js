@@ -171,8 +171,11 @@ var S3Play = Em.Object.create({
       files.every(function(file, idx){
         var name = file.replace(/\.\w+$/, '')
         name = file.replace(/\/$/g, '').replace(/\//g, ' - ')
-        if (name.match(/\.\w{3}$/)) {
-          var song = Em.Object.create({ name: name, file: self.s3_bucket_url+"/"+file })
+        var ext_regex = /\.(\w{3})$/
+        var match = file.match(ext_regex)
+        if (match) {
+          name = name.replace(ext_regex, '')
+          var song = Em.Object.create({ name: name, ext: match[1], file: self.s3_bucket_url+"/"+file })
           S3Play.songs.push(song)
         }
         return idx < 1000 // prevent browser crash
