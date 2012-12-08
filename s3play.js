@@ -1,17 +1,14 @@
-var Songs = [
-  // Em.Object.create({ name: "Adebisi Shank - Logdrum", file: "songs/adebisi_shank-logdrum.mp3" }),
-  //  Em.Object.create({ name: "Aphex Twin - Avril 14th", file: "songs/aphex_twin-avril_14th.mp3" }),
-  //  Em.Object.create({ name: "Ronald Jenkees - Disorganized Fun", file: "songs/ronald_jenkees-disorganized_fun.mp3" }),
-  Em.Object.create({ name: "Ratatat - One", file: "songs/ratatat-one.mp3" }),
-  Em.Object.create({ name: "edIT - Screening Phone Calls", file: "songs/edit-screening-phone-calls.mp3" }),
-  Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
+var Songs = [  
+  // Em.Object.create({ name: "Ratatat - One", file: "songs/ratatat-one.mp3" }),
+  // Em.Object.create({ name: "edIT - Screening Phone Calls", file: "songs/edit-screening-phone-calls.mp3" }),
+  // Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
 ]
 
 
 var S3PlayEmberApp = Em.Application.create({})
 
 var S3Play = Em.Object.create({
-  s3_bucket_url: "http://s3play.s3.amazonaws.com",
+  s3_bucket_url: "http://mkvmusic.s3.amazonaws.com",
   songs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
@@ -118,10 +115,10 @@ var S3Play = Em.Object.create({
   },
 
   update_slider_position: function(evt){
-    var seekbar = $("input.current_time").get(0)
-    var lastBuffered = this.audio.buffered.end(this.audio.buffered.length-1);
-    seekbar.max = lastBuffered;
-    seekbar.value = this.audio.currentTime;
+    // var seekbar = $("input.current_time").get(0)
+    // var lastBuffered = this.audio.buffered.end(this.audio.buffered.length-1);
+    // seekbar.max = lastBuffered;
+    // seekbar.value = this.audio.currentTime;
   },
 
 
@@ -143,7 +140,9 @@ var S3Play = Em.Object.create({
     songs.forEach(function(song) {
       self.songs.push(song)
     })
-    this.set_current(songs[0])
+
+    if (songs[0])
+      this.set_current(songs[0]) 
   },
 
   // utils
@@ -171,8 +170,12 @@ var S3Play = Em.Object.create({
 
       files.every(function(file, idx){
         var name = file.replace(/\.\w+$/, '')
-        S3Play.songs.push(Em.Object.create({ name: name, file: self.s3_bucket_url+"/"+file }))
-        return idx < 300 // prevent browser crash
+        name = file.replace(/\/$/g, '').replace(/\//g, ' - ')
+        if (name.match(/\.\w{3}$/)) {
+          var song = Em.Object.create({ name: name, file: self.s3_bucket_url+"/"+file })
+          S3Play.songs.push(song)
+        }
+        return idx < 1000 // prevent browser crash
       })
       S3Play.songsView.rerender()
     })

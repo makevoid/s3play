@@ -50,8 +50,8 @@ header {
 
 .player {
   background: #AAA;
-  background: -webkit-linear-gradient(bottom, #AAA 10%, #EEE 90%);
-  background: -moz-linear-gradient(bottom, #AAA 10%, #EEE 90%);
+  background: -webkit-linear-gradient(bottom, #CCC 10%, #EEE 90%);
+  background: -moz-linear-gradient(bottom, #CCC 10%, #EEE 90%);
   border-radius: 18px;
   padding: 2% 2% 2%;
   border: 1px solid #777;
@@ -84,8 +84,6 @@ h1 {
 .songs {
   margin: 10px 0 0 0;
   background: #DDD;
-  background: -webkit-linear-gradient(bottom, #AAA 30%, #DDD 90%);
-  background: -moz-linear-gradient(bottom, #AAA 30%, #DDD 90%);
   box-shadow:  0px 1px 3px #FFF, 0px 1px 30px #FFF;
   border: 1px solid #777;
   border-radius: 10px;
@@ -101,8 +99,8 @@ h1 {
 
 .songs a {
   background: #AAA;
-  background: -webkit-linear-gradient(bottom, #AAA 30%, #DDD 90%);
-  background: -moz-linear-gradient(bottom, #AAA 30%, #DDD 90%);
+  background: -webkit-linear-gradient(bottom, #CCC 30%, #FAFAFA 90%);
+  background: -moz-linear-gradient(bottom, #CCC 30%, #FAFAFA 90%);
   padding: 1.2% 2%;
 }
 
