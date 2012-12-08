@@ -1,10 +1,20 @@
 # S3Play
-
 ### Ember app to play audio files directly from s3
 
-test it in a webkit browser (chrome/safari), especially if you have only mp3s ;)
+Demo:
+<http://s3play.makevoid.com>
 
-This is a basic Ember app, made specifically for this ember flor talk: [florenceonruby.it/talks/7](http://florenceonruby.it/talks/7)
+To play songs directly from your bucket:
+<http://s3play.makevoid.com?bucket=BUCKET_NAME>
+
+Note: You have to have Read and List permissions set.
+
+
+Try it in a webkit browser (chrome/safari), especially if you have only mp3s ;)
+
+---
+
+This was made specifically for this ember FLOR talk: [florenceonruby.it/talks/7](http://florenceonruby.it/talks/7)
 
 stream: http://livestream.4ktech.net/channel/florence-on-ruby
 

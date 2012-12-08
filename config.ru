@@ -1,5 +1,5 @@
-require 'sinatra/base'
-
+require 'bundler/setup'
+Bundler.require :default
 
 class Static < Sinatra::Base
   PATH = File.expand_path("../", __FILE__)
