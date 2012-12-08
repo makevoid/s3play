@@ -4,11 +4,19 @@ var Songs = [
   // Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
 ]
 
+var bucket_name = "s3play"
+
+var split = location.search.replace(/\?/, '').split(/bucket=/)
+
+if (split && split[1]) {
+  bucket_name = split[1]
+}
 
 var S3PlayEmberApp = Em.Application.create({})
 
+
 var S3Play = Em.Object.create({
-  s3_bucket_url: "http://mkvmusic.s3.amazonaws.com",
+  s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com",
   songs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
