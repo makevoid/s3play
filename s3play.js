@@ -1,10 +1,14 @@
-var Songs = [  
+var Songs = [
   // Em.Object.create({ name: "Ratatat - One", file: "songs/ratatat-one.mp3" }),
   // Em.Object.create({ name: "edIT - Screening Phone Calls", file: "songs/edit-screening-phone-calls.mp3" }),
   // Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
 ]
 
 var bucket_name = "s3play"
+
+var max_song_limit = 1000;
+
+max_song_limit = 300 if navigator.userAgent.match(/(iphone|android)/i
 
 var split = location.search.replace(/\?/, '').split(/bucket=/)
 
@@ -150,7 +154,7 @@ var S3Play = Em.Object.create({
     })
 
     if (songs[0])
-      this.set_current(songs[0]) 
+      this.set_current(songs[0])
   },
 
   // utils
@@ -186,7 +190,7 @@ var S3Play = Em.Object.create({
           var song = Em.Object.create({ name: name, ext: match[1], file: self.s3_bucket_url+"/"+file })
           S3Play.songs.push(song)
         }
-        return idx < 1000 // prevent browser crash
+        return idx < max_song_limit // prevent browser crash
       })
       S3Play.songsView.rerender()
     })
