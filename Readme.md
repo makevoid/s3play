@@ -21,3 +21,10 @@ stream: http://livestream.4ktech.net/channel/florence-on-ruby
 music by:
 - http://soundcloud.com/aritmiamusic
 - http://soundcloud.com/motionless-opaque
+
+---
+
+### TODO:
+
+- feature: player link and sync
+  - history .push and .replace state continuously to link the current song at the current timestamp + login to sync the players ;)
