@@ -8,7 +8,7 @@ var bucket_name = "s3play"
 
 var max_song_limit = 1000;
 
-if (navigator.userAgent.match(/(iphone|android)/i)
+if (navigator.userAgent.match(/(iphone|android)/i))
   max_song_limit = 300
 
 var split = location.search.replace(/\?/, '').split(/bucket=/)
