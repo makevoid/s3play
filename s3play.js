@@ -26,6 +26,7 @@ var S3Play = Em.Object.create({
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
   playing: false,
+  download: "javascript:void(0)",
 
 
   // views
@@ -35,6 +36,7 @@ var S3Play = Em.Object.create({
     song_nameBinding: "S3Play.current.name",
     fileBinding: "S3Play.current.file",
     playingBinding: "S3Play.playing",
+    downloadBinding: "S3Play.download",
     play_pause: function(evt){
       S3Play.play_pause()
     },
@@ -140,6 +142,7 @@ var S3Play = Em.Object.create({
   change_song: function(song){
     this.pause()
     this.set_current(song)
+    this.set("download", song.file)
     var self = this
     setTimeout(function(){
       self.play()

@@ -80,6 +80,21 @@ header {
   line-height: 27px;
 }
 
+.player a.download {
+  float: right;
+}
+
+.btn {
+  padding: 4px 6px 0;
+  border: 1px solid #fff;
+  border-radius: 10px;
+}
+.btn:hover {
+  background: #FFF;
+  border: 1px solid #AAA;
+}
+
+
 h1 {
   font-size: 90%;
   opacity: 0.7;
