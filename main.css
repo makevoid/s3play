@@ -82,8 +82,17 @@ header {
   line-height: 27px;
 }
 
-.player a.download {
+.player .inputs {
   float: right;
+}
+
+.player span {
+  font-size: 0.7em;
+}
+
+.player input {
+  position: relative;
+  top: 5px;
 }
 
 .btn {
@@ -136,13 +145,10 @@ h1 {
 
 .song_name {
   display: inline;
-  margin: 0 0 0 2%;
+  margin: 0 2% 0 2%;
   font-size: 90%;
 }
 
-input.current_time {
-  margin: 0 0 0 2%;
-}
 
 footer {
   padding: 2.5% 0 3%;

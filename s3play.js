@@ -1,8 +1,6 @@
 var Songs = [
-  // Em.Object.create({ name: "Ratatat - One", file: "songs/ratatat-one.mp3" }),
-  // Em.Object.create({ name: "edIT - Screening Phone Calls", file: "songs/edit-screening-phone-calls.mp3" }),
-  // Em.Object.create({ name: "Younger Brother - Pound A Rythm", file: "https://s3-eu-west-1.amazonaws.com/mkvmusic/Younger+Brother/Vaccine/03+Pound+A+Rhythm.mp3" })
-]
+  // Em.Object.create({ name: "A song", file: "songs/a-song.mp3" }),
+] // load local files here
 
 var bucket_name = "s3play"
 var cors = true
@@ -50,6 +48,9 @@ var S3Play = Em.Object.create({
     },
     set_current_time: function(evt){
       S3Play.set_current_time(evt)
+    },
+    set_volume: function(evt){
+      S3Play.set_volume(evt)
     }
   }),
 
@@ -136,6 +137,13 @@ var S3Play = Em.Object.create({
   set_current_time: function(evt){
     var time = $(evt.target).val()
     this.audio.currentTime = time
+
+    localStorage
+  },
+
+  set_volume: function(evt){
+    var volume = $(evt.target).val()
+    this.audio.volume = volume
   },
 
   update_slider_position: function(evt){
@@ -162,15 +170,23 @@ var S3Play = Em.Object.create({
 
     var full = $(".song").length && artist == $(".song").data("artist")
     S3Play.artistsView.rerender()
-    if (!full) {
-      setTimeout(function(){
-        $("a[data-name='"+artist+"']").after(div)
-        songsView.appendTo(div)
+    setTimeout(function(){
+      var extra_height = $(".player").outerHeight()
+      var extra_height2 = extra_height + $(".dir").outerHeight()
+      if (!full) {
+          $("a[data-name='"+artist+"']").after(div)
+          songsView.appendTo(div)
+          $('html, body').animate({
+            scrollTop: div.offset().top - extra_height2
+          }, 10)
+      } else {
+        var elem = $("a[data-name='"+artist+"']").after(div)
+        console.log(elem.offset().top)
         $('html, body').animate({
-          scrollTop: div.offset().top - $(".player").outerHeight() - $(".dir").outerHeight()
-        }, 500)
-      }, 100)
-    }
+            scrollTop: elem.offset().top - extra_height
+          }, 10)
+      }
+    }, 0)
   },
 
   // change song

@@ -16,8 +16,15 @@
       <a class="next" {{action "next"}} href="javascript:void(0)"> ≫ </a>
       <audio  class='s3play_audio' {{bindAttr src="file"}}></audio>
       <div class="song_name">{{song_name}}</div>
-      <input class="current_time" type="range" {{action "set_current_time" on="change"}} value=0></type>
-      <a class="download btn" {{bindAttr href="download"}}> ⇓ </a>
+
+      <div class="inputs">
+        <span>seek:</span>
+        <input class="current_time" type="range" {{action "set_current_time" on="change"}} value=0></type>
+
+        <span>vol:</span>
+        <input class="volume" type="range" {{action "set_volume" on="change"}} value=0 max=1 step=0.02></type>
+        <a class="download btn" {{bindAttr href="download"}}> ⇓ </a>
+      </div>
     </script>
     <script type="text/x-handlebars" data-template-name="artists">
       <h1>Artists</h1>
