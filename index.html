@@ -19,10 +19,16 @@
       <input class="current_time" type="range" {{action "set_current_time" on="change"}} value=0></type>
       <a class="download btn" {{bindAttr href="download"}}> ⇓ </a>
     </script>
+    <script type="text/x-handlebars" data-template-name="artists">
+      <h1>Artists</h1>
+
+      {{#each dirs}}
+        <a href="javascript:void(0)" class="dir" {{bindAttr data-name="this"}} {{action "change_artist"}}>{{this}}</a>
+      {{/each}}
+    </script>
     <script type="text/x-handlebars" data-template-name="songs">
-      <h1>Songs</h1>
       {{#each songs}}
-        <a href="javascript:void(0)" {{action "change"}}>{{name}}</a>
+        <a href="javascript:void(0)" class="song" {{action "change"}} {{bindAttr data-artist="dir"}}>{{name_short}}</a>
       {{/each}}
     </script>
   </head>

@@ -123,7 +123,15 @@ h1 {
   background: #AAA;
   background: -webkit-linear-gradient(bottom, #CCC 30%, #FAFAFA 90%);
   background: -moz-linear-gradient(bottom, #CCC 30%, #FAFAFA 90%);
-  padding: 1.2% 2%;
+  padding: 1.2% 2.5%;
+}
+
+.songs a.dir {
+  font-weight: bold;
+  background: #999;
+  background: -webkit-linear-gradient(bottom, #BBB 30%, #EEE 90%);
+  background: -moz-linear-gradient(bottom, #BBB 30%, #EEE 90%);
+  padding: 1.2% 1.5%;
 }
 
 .song_name {

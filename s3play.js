@@ -5,8 +5,9 @@ var Songs = [
 ]
 
 var bucket_name = "s3play"
+var cors = true
 
-var max_song_limit = 1000;
+var max_song_limit = 100000
 
 if (navigator.userAgent.match(/(iphone|android)/i))
   max_song_limit = 200
@@ -23,10 +24,11 @@ var S3PlayEmberApp = Em.Application.create({})
 var S3Play = Em.Object.create({
   s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com",
   songs: [],
+  dirs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
   audio: null,
   playing: false,
-  download: "javascript:void(0)",
+  download: "javascript: id(0)",
 
 
   // views
@@ -51,6 +53,14 @@ var S3Play = Em.Object.create({
     }
   }),
 
+  artistsView: Em.View.create({
+    templateName: 'artists',
+    dirsBinding: 'S3Play.dirs',
+    change_artist: function(evt){
+      S3Play.change_artist(evt.context)
+    }
+  }),
+
   songsView: Em.View.create({
     templateName: 'songs',
     songsBinding: 'S3Play.songs',
@@ -58,7 +68,6 @@ var S3Play = Em.Object.create({
       S3Play.change_song(evt.context)
     }
   }),
-
   // constructor
 
   init: function(){
@@ -66,7 +75,7 @@ var S3Play = Em.Object.create({
     var self = this
     $(function(){
       self.playerView.appendTo("#s3play")
-      self.songsView.replaceIn(".s3play_songs")
+      self.artistsView.replaceIn(".s3play_songs")
       setTimeout(
         function(){
           self.bind_ui()
@@ -136,6 +145,33 @@ var S3Play = Em.Object.create({
     // seekbar.value = this.audio.currentTime;
   },
 
+  // change artist
+  change_artist: function(artist){
+    var songs = _(this.songs).select(function(song){
+      return song.dir == artist
+    })
+
+    var div = $("<div>")
+    var songsView = Em.View.create({
+      templateName: 'songs',
+      songs: songs,
+      change: function(evt){
+        S3Play.change_song(evt.context)
+      }
+    })
+
+    var full = $(".song").length && artist == $(".song").data("artist")
+    S3Play.artistsView.rerender()
+    if (!full) {
+      setTimeout(function(){
+        $("a[data-name='"+artist+"']").after(div)
+        songsView.appendTo(div)
+        $('html, body').animate({
+          scrollTop: div.offset().top - $(".player").outerHeight() - $(".dir").outerHeight()
+        }, 500)
+      }, 100)
+    }
+  },
 
   // change song
 
@@ -177,7 +213,13 @@ var S3Play = Em.Object.create({
 
   s3_load: function(){
     var self = this
-    $.get("http://jscrape.it:9393/q/"+encodeURIComponent(this.s3_bucket_url), function(data){
+    var url
+    if (cors)
+      url = this.s3_bucket_url
+    else
+      url = "http://jscrape.it:9393/q/"+encodeURIComponent(this.s3_bucket_url)
+
+    $.get(url, function(data){
       var contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
       var files = _(contents).map(function(elem){
         var key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
@@ -185,20 +227,27 @@ var S3Play = Em.Object.create({
       })
 
       files.every(function(file, idx){
+        // FIXME: console.log(file) - where are edIT and hol baumann?
+
         var name = file.replace(/\.\w+$/, '')
         name = file.replace(/\/$/g, '').replace(/\//g, ' - ')
-        var dir = name.match(/(.+) - /)[1]
-        
+        var dir = name.match(/(.+?) - /)
+        if (dir)
+          dir = dir[1]
+
         var ext_regex = /\.(\w{3})$/
         var match = file.match(ext_regex)
         if (match) {
           name = name.replace(ext_regex, '')
-          var song = Em.Object.create({ name: name, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
+          name_short = name.replace(/(.+?) - /, '')
+          var song = Em.Object.create({ name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
           S3Play.songs.push(song)
+          if ( !_(S3Play.dirs).include(dir) )
+            S3Play.dirs.push(dir)
         }
         return idx < max_song_limit // prevent browser crash
       })
-      S3Play.songsView.rerender()
+      S3Play.artistsView.rerender()
     })
   }
 
