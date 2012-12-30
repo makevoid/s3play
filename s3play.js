@@ -84,7 +84,10 @@ var S3Play = Em.Object.create({
         }, 0
       )
     })
-    this.s3_load()
+
+    this.s3_load(function(){
+      S3Play.restore_state()
+    })
   },
 
   // ui
@@ -97,6 +100,7 @@ var S3Play = Em.Object.create({
     })
     this.audio.addEventListener('timeupdate', function(){
       self.update_slider_position()
+      self.store_state()
     })
   },
 
@@ -137,20 +141,57 @@ var S3Play = Em.Object.create({
   set_current_time: function(evt){
     var time = $(evt.target).val()
     this.audio.currentTime = time
-
-    localStorage
   },
 
   set_volume: function(evt){
     var volume = $(evt.target).val()
-    this.audio.volume = volume
+    this.volume(volume)
+  },
+
+  volume_input: function(){ return $("input.volume").get(0) },
+  current_time_input: function(){ return $("input.current_time").get(0) },
+
+
+  volume: function(vol) {
+    this.audio.volume = vol
+    this.volume_input().value = vol
+    localStorage.state_volume = vol
   },
 
   update_slider_position: function(evt){
-    // var seekbar = $("input.current_time").get(0)
-    // var lastBuffered = this.audio.buffered.end(this.audio.buffered.length-1);
-    // seekbar.max = lastBuffered;
-    // seekbar.value = this.audio.currentTime;
+    var seekbar = this.current_time_input()
+    if (!this.audio.buffered.length)
+      return
+    seekbar.max = this.audio.duration;
+    seekbar.value = this.audio.currentTime;
+  },
+
+  store_state: function(evt){
+    localStorage.state_time = this.audio.currentTime
+    localStorage.state_volume = this.audio.volume
+    localStorage.state_file = this.current.file
+    localStorage.state_playing = this.get("playing")
+  },
+
+  restore_state: function(evt){
+    if (localStorage && localStorage.state_time) {
+      var song = this.find_song(localStorage.state_file)
+      this.change_song(song)
+      if (!localStorage.state_playing)
+        this.pause()
+      this.volume(localStorage.state_volume)
+      var self = this
+      var time = localStorage.state_time
+      setTimeout(function(){
+        self.audio.currentTime = time
+      }, 100)
+    }
+  },
+
+  find_song: function(file){
+    return _(this.songs).find(function(song){
+      return song.get("file") == file
+    })
   },
 
   // change artist
@@ -227,7 +268,7 @@ var S3Play = Em.Object.create({
 
   // S3
 
-  s3_load: function(){
+  s3_load: function(callback){
     var self = this
     var url
     if (cors)
@@ -264,6 +305,8 @@ var S3Play = Em.Object.create({
         return idx < max_song_limit // prevent browser crash
       })
       S3Play.artistsView.rerender()
+
+      callback()
     })
   }
 
