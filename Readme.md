@@ -28,3 +28,7 @@ music by:
 
 - feature: player link and sync
   - history .push and .replace state continuously to link the current song at the current timestamp + login to sync the players ;)
+  
+## Credits:
+
+Icon: Tiziano Berti <tiz.berti@gmail.com>
