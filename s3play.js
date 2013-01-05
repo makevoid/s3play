@@ -8,7 +8,7 @@ var cors = true
 var max_song_limit = 100000
 
 if (navigator.userAgent.match(/(iphone|android)/i))
-  max_song_limit = 200
+  max_song_limit = 500
 
 var split = location.search.replace(/\?/, '').split(/bucket=/)
 
@@ -18,9 +18,11 @@ if (split && split[1]) {
 
 var S3PlayEmberApp = Em.Application.create({})
 
+// TODO: use marker
+// es: http://xxx.s3.amazonaws.com/?max-keys=5&marker=Quantic
 
 var S3Play = Em.Object.create({
-  s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com",
+  s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com/?max-keys="+max_song_limit,
   songs: [],
   dirs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
