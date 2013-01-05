@@ -18,11 +18,12 @@ if (split && split[1]) {
 
 var S3PlayEmberApp = Em.Application.create({})
 
-// TODO: use marker
+// TODO: max-keys, add to single urls and use marker to rotate trough pages
+// ?max-keys=
 // es: http://xxx.s3.amazonaws.com/?max-keys=5&marker=Quantic
 
 var S3Play = Em.Object.create({
-  s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com/?max-keys="+max_song_limit,
+  s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com/"+max_song_limit,
   songs: [],
   dirs: [],
   current: Em.Object.create({ name: "not loaded", file: "test" }),
