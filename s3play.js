@@ -84,7 +84,7 @@ var S3Play = Em.Object.create({
         function(){
           self.bind_ui()
           // self.play()
-        }, 0
+        }, 200 // FIXME: should be 0, trying to fix $(".s3play_audio").get(0) null on ffox win (tizzo)
       )
     })
 
