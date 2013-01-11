@@ -26,10 +26,20 @@ var S3Play = Em.Object.create({
   s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com",
   songs: [],
   dirs: [],
-  current: Em.Object.create({ name: "not loaded", file: "test" }),
+  current: Em.Object.create({ name: "not loaded", file: "#" }),
   audio: null,
   playing: false,
   download: "javascript: id(0)",
+
+
+  // helpers
+
+  s3_bucket_list: function(last_marker){
+    marker = ""
+    if (last_marker)
+      marker = "?marker="+last_marker
+    return this.s3_bucket_url+marker
+  },
 
 
   // views
@@ -72,6 +82,8 @@ var S3Play = Em.Object.create({
       S3Play.change_song(evt.context)
     }
   }),
+
+
   // constructor
 
   init: function(){
@@ -93,6 +105,7 @@ var S3Play = Em.Object.create({
     })
   },
 
+
   // ui
 
   bind_ui: function(){
@@ -106,6 +119,7 @@ var S3Play = Em.Object.create({
       self.store_state()
     })
   },
+
 
   // controls
 
@@ -139,7 +153,8 @@ var S3Play = Em.Object.create({
     this.change_song(this.songs[index])
   },
 
-  // slider control
+
+  // sliders control | volume/seek
 
   set_current_time: function(evt){
     var time = $(evt.target).val()
@@ -153,7 +168,6 @@ var S3Play = Em.Object.create({
 
   volume_input: function(){ return $("input.volume").get(0) },
   current_time_input: function(){ return $("input.current_time").get(0) },
-
 
   volume: function(vol) {
     this.audio.volume = vol
@@ -197,7 +211,8 @@ var S3Play = Em.Object.create({
     })
   },
 
-  // change artist
+  // change artist, TODO: refactor
+
   change_artist: function(artist){
     var songs = _(this.songs).select(function(song){
       return song.dir == artist
@@ -274,43 +289,67 @@ var S3Play = Em.Object.create({
   s3_load: function(callback){
     var self = this
     var url
-    if (cors)
+    if (cors) {
       url = this.s3_bucket_url
-    else
+    } else {
       url = "http://jscrape.it:9393/q/"+encodeURIComponent(this.s3_bucket_url)
+    }
 
-    $.get(url, function(data){
-      var contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
-      var files = _(contents).map(function(elem){
-        var key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
-        return key.childNodes[0].wholeText
-      })
+    this.get_all(callback)
+  },
 
-      files.every(function(file, idx){
-        // FIXME: console.log(file) - where are edIT and hol baumann?
+  // Ajax
 
-        var name = file.replace(/\.\w+$/, '')
-        name = file.replace(/\/$/g, '').replace(/\//g, ' - ')
-        var dir = name.match(/(.+?) - /)
-        if (dir)
-          dir = dir[1]
+  get_all: function(callback) {
 
-        var ext_regex = /\.(\w{3})$/
-        var match = file.match(ext_regex)
-        if (match) {
-          name = name.replace(ext_regex, '')
-          name_short = name.replace(/(.+?) - /, '')
-          var song = Em.Object.create({ name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
-          S3Play.songs.push(song)
-          if ( !_(S3Play.dirs).include(dir) )
-            S3Play.dirs.push(dir)
-        }
-        return idx < max_song_limit // prevent browser crash
-      })
+    // TODO: scan markers (this is very manual)
+    this.get_one(null, callback)
+    this.get_one("Entheogenic", callback)
+    this.get_one("Pendulum", callback)
+
+  },
+
+  get_one: function(marker, callback){
+    var self = this
+    $.get(this.s3_bucket_list(marker), function(data){
+      self.got_one(data)
+
       S3Play.artistsView.rerender()
-
-      callback()
+      if (callback)
+        callback()
     })
+  },
+
+  got_one: function(data, callback) {
+    var contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
+    var files = _(contents).map(function(elem){
+      var key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
+      return key.childNodes[0].wholeText
+    })
+
+    files.every(function(file, idx){
+      // FIXME: console.log(file) - where are edIT and hol baumann?
+
+      var name = file.replace(/\.\w+$/, '')
+      name = file.replace(/\/$/g, '').replace(/\//g, ' - ')
+      var dir = name.match(/(.+?) - /)
+      if (dir)
+        dir = dir[1]
+
+      var ext_regex = /\.(\w{3})$/
+      var match = file.match(ext_regex)
+      if (match) {
+        name = name.replace(ext_regex, '')
+        name_short = name.replace(/(.+?) - /, '')
+        var song = Em.Object.create({ name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
+        S3Play.songs.push(song)
+        if ( !_(S3Play.dirs).include(dir) )
+          S3Play.dirs.push(dir)
+      }
+      return idx < max_song_limit // prevent browser crash
+    })
+
+    S3Play.dirs = S3Play.dirs.sort()
   }
 
 })
