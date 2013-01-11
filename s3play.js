@@ -327,6 +327,7 @@ var S3Play = Em.Object.create({
       return key.childNodes[0].wholeText
     })
 
+    var self = this
     files.every(function(file, idx){
       // FIXME: console.log(file) - where are edIT and hol baumann?
 
