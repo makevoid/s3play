@@ -172,3 +172,21 @@ footer {
   text-align: right;
   text-shadow: none;
 }
+
+@media (max-width: 500px) {
+  .inputs {
+    display: none;
+  }
+
+  .player {
+    font-size: 14px;
+  }
+
+  .player a, .player a.play_pause {
+    font-size: 18px;
+  }
+
+  .content, .player {
+    width: 97%;
+  }
+}
