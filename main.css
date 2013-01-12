@@ -77,14 +77,15 @@ header {
 
 .player a.play_pause {
   font-size:  22px;
-  margin: 0 6px 0 10px;
+  margin: 0 11px 0 10px;
   position: relative;
   top: 2px;
 }
 
 .player a.playing {
-  margin: 0 -12px 0 3px;
-  line-height: 27px;
+  margin: 0 0 0 3px;
+  position: relative;
+  left: 5px;
 }
 
 .player .inputs {

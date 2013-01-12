@@ -94,14 +94,19 @@ var S3Play = Em.Object.create({
       self.artistsView.replaceIn(".s3play_songs")
       setTimeout(
         function(){
-          self.bind_ui()
+          // self.bind_ui()
           // self.play()
         }, 200 // FIXME: should be 0, trying to fix $(".s3play_audio").get(0) null on ffox win (tizzo)
       )
     })
 
     this.s3_load(function(){
-      S3Play.restore_state()
+      setTimeout(
+        function(){
+          self.bind_ui()
+          self.restore_state()
+        }, 200
+      )
     })
   },
 
@@ -193,15 +198,19 @@ var S3Play = Em.Object.create({
   restore_state: function(evt){
     if (localStorage && localStorage.state_time) {
       var song = this.find_song(localStorage.state_file)
-      this.change_song(song)
-      if (!localStorage.state_playing)
-        this.pause()
-      this.volume(localStorage.state_volume)
-      var self = this
-      var time = localStorage.state_time
-      setTimeout(function(){
-        self.audio.currentTime = time
-      }, 100)
+      if (song) {
+        this.change_song(song)
+
+        if (!localStorage.state_playing)
+          this.pause()
+        this.volume(localStorage.state_volume)
+        var self = this
+        var time = localStorage.state_time
+        setTimeout(function(){
+          if (time != 0)
+            self.audio.currentTime = time
+        }, 100)
+      }
     }
   },
 
