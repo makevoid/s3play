@@ -249,7 +249,6 @@ var S3Play = Em.Object.create({
           }, 10)
       } else {
         var elem = $("a[data-name='"+artist+"']").after(div)
-        console.log(elem.offset().top)
         $('html, body').animate({
             scrollTop: elem.offset().top - extra_height
           }, 10)
