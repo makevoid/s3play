@@ -26,9 +26,9 @@ music by:
 
 ### TODO:
 
-- bugfix: songs are skipped
-
 - feature: save playlist in localstorage + reload button
+
+- feature: keybard events (space = pause/play)
 
 - feature: duplicate tracks removal
 

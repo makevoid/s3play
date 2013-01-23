@@ -1,3 +1,6 @@
+if (!console)
+  var console = {}
+
 var Songs = [
   // Em.Object.create({ name: "A song", file: "songs/a-song.mp3" }),
 ] // load local files here
@@ -342,26 +345,35 @@ var S3Play = Em.Object.create({
     files.every(function(file, idx){
       // FIXME: console.log(file) - where are edIT and hol baumann?
 
-      var name = file.replace(/\.\w+$/, '')
-      name = file.replace(/\/$/g, '').replace(/\//g, ' - ')
-      var dir = name.match(/(.+?) - /)
-      if (dir)
-        dir = dir[1]
-
-      var ext_regex = /\.(\w{3})$/
-      var match = file.match(ext_regex)
-      if (match) {
-        name = name.replace(ext_regex, '')
-        name_short = name.replace(/(.+?) - /, '')
-        var song = Em.Object.create({ name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
-        S3Play.songs.push(song)
-        if ( !_(S3Play.dirs).include(dir) )
-          S3Play.dirs.push(dir)
+      if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)){
+        self.push_song(file)
+      }else{
+        // console.log("not audio: "+file)
       }
+
       return idx < max_song_limit // prevent browser crash
     })
 
     S3Play.dirs = S3Play.dirs.sort()
+  },
+
+  push_song: function(file){
+    var name = file.replace(/\.\w+$/, '')
+    name = file.replace(/\/$/g, '').replace(/\//g, ' - ')
+    var dir = name.match(/(.+?) - /)
+    if (dir)
+      dir = dir[1]
+
+    var ext_regex = /\.(\w{3})$/
+    var match = file.match(ext_regex)
+    if (match) {
+      name = name.replace(ext_regex, '')
+      name_short = name.replace(/(.+?) - /, '')
+      var song = Em.Object.create({ name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
+      S3Play.songs.push(song)
+      if ( !_(S3Play.dirs).include(dir) )
+        S3Play.dirs.push(dir)
+    }
   }
 
 })
