@@ -22,6 +22,11 @@ var S3PlayEmberApp = Em.Application.create({})
 // "/?max-keys="+max_song_limit
 // es: http://xxx.s3.amazonaws.com/?max-keys=5&marker=Quantic
 
+
+$.get_cached = function(url, callback){
+  return $.get(url, callback)
+}
+
 var S3Play = Em.Object.create({
   s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com",
   songs: [],
@@ -92,12 +97,6 @@ var S3Play = Em.Object.create({
     $(function(){
       self.playerView.appendTo("#s3play")
       self.artistsView.replaceIn(".s3play_songs")
-      setTimeout(
-        function(){
-          // self.bind_ui()
-          // self.play()
-        }, 200 // FIXME: should be 0, trying to fix $(".s3play_audio").get(0) null on ffox win (tizzo)
-      )
     })
 
     this.s3_load(function(){
@@ -105,7 +104,7 @@ var S3Play = Em.Object.create({
         function(){
           self.bind_ui()
           self.restore_state()
-        }, 200
+        }, 0
       )
     })
   },
@@ -116,6 +115,7 @@ var S3Play = Em.Object.create({
   bind_ui: function(){
     this.audio = $(".s3play_audio").get(0)
     var self = this
+    $(".s3play_audio").off()
     $(".s3play_audio").on("ended", function(){
       self.next()
     })
@@ -311,15 +311,18 @@ var S3Play = Em.Object.create({
   get_all: function(callback) {
 
     // TODO: scan markers (this is very manual)
-    this.get_one(null, callback)
-    this.get_one("Entheogenic", callback)
-    this.get_one("Pendulum", callback)
+    var a = this.get_one(null)
+    var b = this.get_one("Entheogenic")
+    var c = this.get_one("Pendulum")
 
+    $.when(a, b, c).done(function(){
+      callback()
+    })
   },
 
   get_one: function(marker, callback){
     var self = this
-    $.get(this.s3_bucket_list(marker), function(data){
+    return $.get_cached(this.s3_bucket_list(marker), function(data){
       self.got_one(data)
 
       S3Play.artistsView.rerender()

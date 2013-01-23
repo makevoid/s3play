@@ -26,9 +26,27 @@ music by:
 
 ### TODO:
 
+- bugfix: songs are skipped
+
+- feature: save playlist in localstorage + reload button
+
+- feature: duplicate tracks removal
+
 - feature: player link and sync
   - history .push and .replace state continuously to link the current song at the current timestamp + login to sync the players ;)
-  
+
+
+
+- feature: remote control
+
+- use svgs?
+
+    <svg width="30px" height="30px" viewBox="0 0 100 100">
+       <polygon
+      points="0,0 100,50 0,100"
+      style="fill: green;"/>
+    </svg>
+
 ## Credits:
 
 Icon: Tiziano Berti <tiz.berti@gmail.com>
