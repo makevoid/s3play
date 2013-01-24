@@ -28,6 +28,16 @@ var S3PlayEmberApp = Em.Application.create({})
 
 $.get_cached = function(url, callback){
   return $.get(url, callback)
+  return $.ajax({
+      url          : url,
+      localCache   : false,
+      cacheTTL     : 1,
+      isCacheValid : function(){
+        return true;
+      },
+      dataType: "xml",
+      success: callback
+  })
 }
 
 var S3Play = Em.Object.create({
@@ -326,24 +336,23 @@ var S3Play = Em.Object.create({
   get_one: function(marker, callback){
     var self = this
     return $.get_cached(this.s3_bucket_list(marker), function(data){
+
+      bla = data
+
       self.got_one(data)
 
-      S3Play.artistsView.rerender()
+      self.artistsView.rerender()
       if (callback)
         callback()
     })
   },
 
   got_one: function(data, callback) {
-    var contents = _(data.childNodes[0].childNodes).select(function(node){ return node.nodeName == "Contents" })
-    var files = _(contents).map(function(elem){
-      var key = _(elem.childNodes).find(function(node){ return node.nodeName == "Key" })
-      return key.childNodes[0].wholeText
-    })
-
+    var files = data
     var self = this
+
     files.every(function(file, idx){
-      // FIXME: console.log(file) - where are edIT and hol baumann?
+      // FIXME: where are edIT and hol baumann?
 
       if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)){
         self.push_song(file)
@@ -354,7 +363,7 @@ var S3Play = Em.Object.create({
       return idx < max_song_limit // prevent browser crash
     })
 
-    S3Play.dirs = S3Play.dirs.sort()
+    self.dirs = self.dirs.sort()
   },
 
   push_song: function(file){
@@ -366,13 +375,14 @@ var S3Play = Em.Object.create({
 
     var ext_regex = /\.(\w{3})$/
     var match = file.match(ext_regex)
+    var self = this
     if (match) {
       name = name.replace(ext_regex, '')
       name_short = name.replace(/(.+?) - /, '')
       var song = Em.Object.create({ name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
-      S3Play.songs.push(song)
-      if ( !_(S3Play.dirs).include(dir) )
-        S3Play.dirs.push(dir)
+      self.songs.push(song)
+      if ( !_(self.dirs).include(dir) )
+        self.dirs.push(dir)
     }
   }
 

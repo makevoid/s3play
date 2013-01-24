@@ -131,7 +131,7 @@ h1 {
 .songs h1 {
   font-size: 70%;
   opacity: 0.5;
-  padding: 1% 2% 0;
+  padding: 1% 0 0 2%;
 }
 
 .songs a {
@@ -142,7 +142,7 @@ h1 {
   border-left: 0;
   border-right: 0;
   border-bottom: 0;
-  padding: 1.2% 2.5%;
+  padding: 0.6% 2%;
 }
 
 .songs a:hover, .songs a.dir:hover {
@@ -156,7 +156,7 @@ h1 {
   background: #999;
   background: -webkit-linear-gradient(bottom, #BBB 30%, #EEE 90%);
   background: -moz-linear-gradient(bottom, #BBB 30%, #EEE 90%);
-  padding: 1.2% 1.5%;
+  padding: 0.6% 2%;
 }
 
 .song_name {
