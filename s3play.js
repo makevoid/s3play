@@ -325,8 +325,8 @@ var S3Play = Em.Object.create({
 
     // TODO: scan markers (this is very manual)
     var a = this.get_one(null)
-    var b = this.get_one("Entheogenic")
-    var c = this.get_one("Pendulum")
+    var b = this.get_one("Children Of Bodom")
+    var c = this.get_one("Tsueno Imahori")
 
     $.when(a, b, c).done(function(){
       callback()
