@@ -122,11 +122,14 @@ var S3Play = Em.Object.create({
     })
   },
 
-
+  
+  
   // ui
 
   bind_ui: function(){
     this.audio = $(".s3play_audio").get(0)
+    console.log(this.audio) // todo: remove me pls
+    
     var self = this
     $(".s3play_audio").off()
     $(".s3play_audio").on("ended", function(){
@@ -220,8 +223,11 @@ var S3Play = Em.Object.create({
         var self = this
         var time = localStorage.state_time
         setTimeout(function(){
-          if (time != 0)
-            self.audio.currentTime = time
+          if (time != 0) {
+            setTimeout(function(){
+              self.audio.currentTime = time
+            }, 1000) // FIXME: remove this, it's awful
+          }
         }, 100)
       }
     }
