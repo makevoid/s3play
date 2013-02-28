@@ -4,11 +4,6 @@
     <title>S3Play</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <link href="main.css" rel="stylesheet" type="text/css">
-    <script src="vendor/jquery.js" type="text/javascript"></script>
-    <script src="vendor/ember.js" type="text/javascript"></script>
-    <script src="vendor/underscore.js" type="text/javascript"></script>
-    <script src="vendor/jquery-ajax-localstorage-cache.js" type="text/javascript"></script>
-    <script src="s3play.js" type="text/javascript"></script>
     <script type="text/x-handlebars" data-template-name="player">
       <a class="prev" {{action "prev"}} href="javascript:void(0)"> ≪ </a>
       <a class="play_pause" {{bindAttr class="playing"}}  {{action "play_pause"}} href="javascript:void(0)">
@@ -53,5 +48,10 @@
         source: <a href='https://github.com/makevoid/s3play'>github/makevoid/s3play</a>
       </footer>
     </div>
+    <script src="vendor/jquery.js" type="text/javascript"></script>
+    <script src="vendor/ember.js" type="text/javascript"></script>
+    <script src="vendor/underscore.js" type="text/javascript"></script>
+    <script src="vendor/jquery-ajax-localstorage-cache.js" type="text/javascript"></script>
+    <script src="s3play.js" type="text/javascript"></script>
   </body>
 </html>
