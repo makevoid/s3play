@@ -127,17 +127,18 @@ var S3Play = Em.Object.create({
   // ui
 
   bind_ui: function(){
-    this.audio = $(".s3play_audio").get(0)
-    console.log(this.audio) // todo: remove me pls
-    
     var self = this
-    $(".s3play_audio").off()
-    $(".s3play_audio").on("ended", function(){
-      self.next()
-    })
-    this.audio.addEventListener('timeupdate', function(){
-      self.update_slider_position()
-      self.store_state()
+    $(function(){
+      this.audio = $(".s3play_audio").get(0)
+ 
+      $(".s3play_audio").off()
+      $(".s3play_audio").on("ended", function(){
+        self.next()
+      })
+      this.audio.addEventListener('timeupdate', function(){
+        self.update_slider_position()
+        self.store_state()
+      })
     })
   },
 
@@ -212,6 +213,10 @@ var S3Play = Em.Object.create({
   },
 
   restore_state: function(evt){
+    var self = this
+    $(function(){
+      self.audio = $(".s3play_audio").get(0)
+    })
     if (localStorage && localStorage.state_time) {
       var song = this.find_song(localStorage.state_file)
       if (song) {
@@ -219,14 +224,17 @@ var S3Play = Em.Object.create({
 
         if (!localStorage.state_playing)
           this.pause()
+          
         this.volume(localStorage.state_volume)
         var self = this
         var time = localStorage.state_time
         setTimeout(function(){
           if (time != 0) {
-            setTimeout(function(){
-              self.audio.currentTime = time
-            }, 1000) // FIXME: remove this, it's awful
+            // setTimeout(function(){
+              // console.log(self.audio.currentTime)
+              if (self.audio && self.audio.currentTime)
+                self.audio.currentTime = time
+            // }, 1000) // FIXME: remove this, it's awful
           }
         }, 100)
       }
