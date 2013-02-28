@@ -135,10 +135,13 @@ var S3Play = Em.Object.create({
       $(".s3play_audio").on("ended", function(){
         self.next()
       })
-      this.audio.addEventListener('timeupdate', function(){
-        self.update_slider_position()
-        self.store_state()
-      })
+      
+      if (this.audio) {
+        this.audio.addEventListener('timeupdate', function(){
+          self.update_slider_position()
+          self.store_state()
+        })  
+      }
     })
   },
 
