@@ -14,6 +14,22 @@ Try it in a webkit browser (chrome/safari), especially if you have only mp3s ;)
 
 ---
 
+### Amazon S3 Configuration
+
+your s3 bucket files must be public, to do so
+
+go to https://console.aws.amazon.com/s3/home
+
+then properties, bucket permissions
+
+and add the following pemissions: Everyone -> List, View
+
+then enter in your bucket, select all your files/folders, then click on Actions > Make public
+
+go to <http://s3play.makevoid.com?bucket=BUCKET_NAME> and enjoy your music!
+
+---
+
 This was made specifically for this ember FLOR talk: [florenceonruby.it/talks/7](http://florenceonruby.it/talks/7)
 
 stream: http://livestream.4ktech.net/channel/florence-on-ruby

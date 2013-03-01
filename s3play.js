@@ -27,7 +27,7 @@ var S3PlayEmberApp = Em.Application.create({})
 
 
 $.get_cached = function(url, callback){
-  return $.get(url, callback)
+  // return $.get(url, callback)
   return $.ajax({
       url          : url,
       localCache   : false,
