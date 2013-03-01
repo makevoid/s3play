@@ -56,7 +56,8 @@ var S3Play = Em.Object.create({
     marker = ""
     if (last_marker)
       marker = "?marker="+last_marker
-    return this.s3_bucket_url+marker
+    // return this.s3_bucket_url+marker  
+    return this.s3_bucket_url+"?max-keys=100000"
   },
 
 
