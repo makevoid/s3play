@@ -342,10 +342,11 @@ var S3Play = Em.Object.create({
 
     // TODO: scan markers (this is very manual)
     var a = this.get_one(null)
-    var b = this.get_one("Cat Power")
-    var c = this.get_one("Lele")
-    var d = this.get_one("Tool")
-    $.when(a, b, c, d).done(function(){
+    // var b = this.get_one("Cat Power")
+    // var c = this.get_one("Lele")
+    // var d = this.get_one("Tool")
+    // $.when(a, b, c, d).done(function(){
+    $.when(a).done(function(){
       callback()
     })
   },
