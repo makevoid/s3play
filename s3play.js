@@ -56,8 +56,8 @@ var S3Play = Em.Object.create({
     marker = ""
     if (last_marker)
       marker = "?marker="+last_marker
-    // return this.s3_bucket_url+marker  
-    return this.s3_bucket_url+"?max-keys=100000"
+    return this.s3_bucket_url+marker  
+    // return this.s3_bucket_url+"?max-keys=100000"
   },
 
 
@@ -340,23 +340,34 @@ var S3Play = Em.Object.create({
   // Ajax
 
   get_all: function(callback) {
-
+    localStorage.clear()
+    
     // TODO: scan markers (this is very manual)
     var a = this.get_one(null)
-    // var b = this.get_one("Cat Power")
+    var b = this.get_one("Asian Dub Foundation/2003 - Asian Dub Foundation - Live Keep Bangin' On the Walls/02 - Charge.flac")
     // var c = this.get_one("Lele")
     // var d = this.get_one("Tool")
     // $.when(a, b, c, d).done(function(){
-    $.when(a).done(function(){
+      
+    // console.log(a)
+    
+      
+      // console.log(_(data).last())
+    
+    var array = [a,b]  
+    // var when = $.when([a, b])
+    var when = $.when.apply(this, array)
+
+    when.done(function(){
       callback()
     })
+
   },
 
   get_one: function(marker, callback){
     var self = this
     return $.get_cached(this.s3_bucket_list(marker), function(data){
-
-      bla = data
+      
 
       self.got_one(data)
 
