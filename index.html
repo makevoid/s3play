@@ -25,6 +25,11 @@
     <script type="text/x-handlebars" data-template-name="artists">
       <h1>Artists</h1>
 
+
+      {{#unless dirs}}
+        loading songs...
+      {{/unless}}
+      
       {{#each dirs}}
         <a href="javascript:void(0)" class="dir" {{bindAttr data-name="this"}} {{action "change_artist"}}>{{this}}</a>
       {{/each}}

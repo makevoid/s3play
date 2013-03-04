@@ -340,40 +340,40 @@ var S3Play = Em.Object.create({
   // Ajax
 
   get_all: function(callback) {
-    localStorage.clear()
+    // http://localhost:3000/?bucket=mkvmusic
+    // localStorage.clear()
+  
+    var self = this
     
-    // TODO: scan markers (this is very manual)
-    var a = this.get_one(null)
-    var b = this.get_one("Asian Dub Foundation/2003 - Asian Dub Foundation - Live Keep Bangin' On the Walls/02 - Charge.flac")
-    // var c = this.get_one("Lele")
-    // var d = this.get_one("Tool")
-    // $.when(a, b, c, d).done(function(){
-      
-    // console.log(a)
-    
-      
-      // console.log(_(data).last())
-    
-    var array = [a,b]  
-    // var when = $.when([a, b])
-    var when = $.when.apply(this, array)
-
-    when.done(function(){
+    var last_call = function(){
+      self.artistsView.rerender()
       callback()
-    })
+    }
+    
+  
+    var cb = function(data) {
+      var last_item = _(data).last()
+      console.log(last_item)
+      
+      if (!last_item) {
+        last_call()
+      } else {
+        self.get_one(last_item, cb)
+      }
+    }
 
+    this.get_one(null, cb)
   },
 
   get_one: function(marker, callback){
     var self = this
     return $.get_cached(this.s3_bucket_list(marker), function(data){
       
-
       self.got_one(data)
 
-      self.artistsView.rerender()
-      if (callback)
-        callback()
+      if (callback) {
+        callback(data)
+      }
     })
   },
 
