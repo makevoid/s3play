@@ -1,9 +1,7 @@
 if (!console)
   var console = {}
 
-var Songs = [
-  // Em.Object.create({ name: "A song", file: "songs/a-song.mp3" }),
-] // load local files here
+// var Em = Ember
 
 var bucket_name = "s3play"
 var cors = true
@@ -21,11 +19,16 @@ if (split && split[1]) {
 
 var S3PlayEmberApp = Em.Application.create({})
 
-// TODO: max-keys, add to single urls and use marker to rotate trough pages
-// "/?max-keys="+max_song_limit
-// es: http://xxx.s3.amazonaws.com/?max-keys=5&marker=Quantic
 
-
+// from hello world 
+//
+// App.IndexRoute = Ember.Route.extend({
+//   setupController: function(controller) {
+//     controller.set('content', ['a', 'b', 'c']);
+//   }
+// });
+  
+  
 $.get_cached = function(url, callback){
   // return $.get(url, callback)
   return $.ajax({
@@ -42,10 +45,10 @@ $.get_cached = function(url, callback){
 
 var S3Play = Em.Object.create({
   s3_bucket_url: "http://"+bucket_name+".s3.amazonaws.com",
-  songs: [],
-  dirs: [],
+  songs: Ember.A([]),
+  dirs: Ember.A([]),
   current: Em.Object.create({ name: "not loaded", file: "#" }),
-  audio: null,
+  
   playing: false,
   download: "javascript: id(0)",
 
@@ -104,15 +107,24 @@ var S3Play = Em.Object.create({
 
 
   // constructor
+  
+  audio: new Audio(),
 
   init: function(){
-    this.load(Songs)
-    var self = this
-    $(function(){
-      self.playerView.appendTo("#s3play")
-      self.artistsView.replaceIn(".s3play_songs")
-    })
+    // var audio = new Audio()
 
+    // audio.addEventListener('ended', function() {
+    //    this.get('target').send('next')
+    //  }.bind(this))
+
+    // this.set('audio', audio)
+    // this.audio = audio
+
+    this.playerView.appendTo("#s3play")
+    this.artistsView.replaceIn(".s3play_songs")
+
+
+    var self = this
     this.s3_load(function(){
       setTimeout(
         function(){
@@ -130,15 +142,14 @@ var S3Play = Em.Object.create({
   bind_ui: function(){
     var self = this
     $(function(){
-      this.audio = $(".s3play_audio").get(0)
  
       $(".s3play_audio").off()
       $(".s3play_audio").on("ended", function(){
         self.next()
       })
       
-      if (this.audio) {
-        this.audio.addEventListener('timeupdate', function(){
+      if (self.audio) {
+        self.audio.addEventListener('timeupdate', function(){
           self.update_slider_position()
           self.store_state()
         })  
@@ -217,10 +228,6 @@ var S3Play = Em.Object.create({
   },
 
   restore_state: function(evt){
-    var self = this
-    $(function(){
-      self.audio = $(".s3play_audio").get(0)
-    })
     if (localStorage && localStorage.state_time) {
       var song = this.find_song(localStorage.state_file)
       if (song) {
@@ -299,18 +306,6 @@ var S3Play = Em.Object.create({
     }, 0)
   },
 
-  // loading
-
-  load: function(songs){
-    var self = this
-    songs.forEach(function(song) {
-      self.songs.push(song)
-    })
-
-    if (songs[0])
-      this.set_current(songs[0])
-  },
-
   // utils
 
   set_current: function(song){
@@ -350,10 +345,9 @@ var S3Play = Em.Object.create({
       callback()
     }
     
-  
     var cb = function(data) {
       var last_item = _(data).last()
-      console.log(last_item)
+      // console.log(last_item)
       
       if (!last_item) {
         last_call()
@@ -383,7 +377,7 @@ var S3Play = Em.Object.create({
 
     files.every(function(file, idx){
       // FIXME: where are edIT and hol baumann?
-
+      
       if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)){
         self.push_song(file)
       }else{
@@ -410,9 +404,10 @@ var S3Play = Em.Object.create({
       name = name.replace(ext_regex, '')
       name_short = name.replace(/(.+?) - /, '')
       var song = Em.Object.create({ name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir })
-      self.songs.push(song)
+      
+      self.songs.pushObject(song)
       if ( !_(self.dirs).include(dir) )
-        self.dirs.push(dir)
+        self.dirs.pushObject(dir)
     }
   }
 
