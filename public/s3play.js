@@ -24,10 +24,12 @@ S3Play.Router.map(function() {
 })
 
 S3Play.ArtistsRoute = Ember.Route.extend({
+  
   setupController: function(controller, playlist) {
     S3.get_all(function(){
       $(".loading_msg").remove()
       controller.set('dirs', S3.dirs)
+      controller.songs_loadeds()
     })
   },
   
@@ -55,14 +57,21 @@ S3Play.ArtistsRoute = Ember.Route.extend({
   },
   
   adjust_scroll: function(artist){
-    // setTimeout(function(){
-      var extra_height = $(".player").outerHeight()
-      var extra_height2 = extra_height + $(".dir").outerHeight()
-      var div = $(".tracks")
-      $('html, body').animate({
-         scrollTop: div.offset().top - extra_height2
-       }, 10)
-    // }, 0)
+    var extra_height = $(".player").outerHeight()
+    var extra_height2 = extra_height + $(".dir").outerHeight()
+    var div = $(".tracks")
+    $('html, body').animate({
+       scrollTop: div.offset().top - extra_height2
+     }, 10)
+  }
+})
+
+S3Play.ArtistsController = Em.Controller.extend({
+  needs: ['player'],
+  playerBinding: 'controllers.player',
+  
+  songs_loadeds: function(){
+    this.player.restore_state()
   }
 })
 
@@ -79,12 +88,15 @@ S3Play.PlayerController = Em.Controller.extend({
     this._super()
     
     var audio = new Audio()
-    // audio.addEventListener('ended', function() {
-    //   this.get('target').send('next')
-    // }.bind(this))
+    
+    audio.addEventListener('ended', function() {
+      this.send('next')
+    }.bind(this))
+    
     audio.addEventListener('timeupdate', function(){
+      // todo: _ throttle or similar
       this.update_slider_position()
-      // this.store_state()
+      this.store_state()
     }.bind(this))
 
     this.set('audio', audio)
@@ -158,7 +170,7 @@ S3Play.PlayerController = Em.Controller.extend({
 
   update_slider_position: function(evt){
     var seekbar = this.current_time_input()
-    var audio = this.get('audio')
+    var audio = this.get('audio')    
     if (!audio.buffered.length)
       return
     seekbar.max = audio.duration
@@ -166,6 +178,8 @@ S3Play.PlayerController = Em.Controller.extend({
   },
   
   current_time_changed: function(){
+    if (!this.get('audio').buffered.length)
+      return
     this.get('audio').currentTime = this.get('current_time')
   }.observes("current_time"),
   
@@ -174,7 +188,57 @@ S3Play.PlayerController = Em.Controller.extend({
     this.get('audio').volume = vol
     this.volume_input().value = vol
     localStorage.state_volume = vol
-  }.observes("volume")
+  }.observes("volume"),
+  
+  // manage player state + localStorage persistance
+  
+  store_state: function(evt){
+    var audio = this.get('audio')
+    localStorage.state_time     = audio.currentTime
+    localStorage.state_volume   = audio.volume
+    localStorage.state_file     = this.get('current').file
+    localStorage.state_playing  = this.get("playing")
+  },
+
+  find_song: function(file){
+    return _(S3.songs).find(function(song){
+      return song.file == file
+    })
+  },
+
+  restore_state: function(evt){
+    if (localStorage && localStorage.state_time) {
+      var song = this.find_song(localStorage.state_file)
+      if (song) {
+        song = Em.Object.create(song)
+        // console.log(song)
+        this.set('current', song)
+
+        if (!localStorage.state_playing)
+          this.pause()
+        
+        // time
+        var time = localStorage.state_time
+        var audio = this.get('audio')
+        
+        
+        setTimeout(function(){
+          if (time != 0) {
+            if (audio && audio.currentTime) {
+              audio.currentTime = time
+            }
+          }
+        }.bind(this), 300) // TODO: fix this, out settimeout, call this when audio is present!!!!!!
+        
+        // volume
+        // console.log(localStorage.state_volume)
+        setTimeout(function(){
+          this.set('volume', localStorage.state_volume)
+        }.bind(this), 0)
+      }
+    }
+  }
+  
 })
 
 

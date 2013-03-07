@@ -44,7 +44,32 @@ music in the default bucket (s3play) by:
 ---
 
 
-###
+### Development
+
+to start the app in the development environment, there are many ways
+
+A) complete, using ruby (1.9+):
+
+install bundler gem and dependencies
+
+    gem install bundler
+    bundle
+
+start the server and guard (to automatically concatenate assets):
+
+    foreman start
+
+B) use python simple http server:
+
+    python -m SimpleHTTPServer 3000
+
+---
+
+in both cases go to <http://localhost:3000> and you should see S3Play on the default bucket!
+
+C) otherwise you can use apache/nginx (or similar) and point it to the root folder 
+    
+    
 
 ### TODO:
 
