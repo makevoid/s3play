@@ -62,6 +62,12 @@ music by:
       points="0,0 100,50 0,100"
       style="fill: green;"/>
     </svg>
+    
+## notes:
+
+list routes:
+
+    S3Play.Router.router.recognizer.names
 
 ## Credits:
 

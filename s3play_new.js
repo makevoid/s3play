@@ -18,11 +18,10 @@ S3Play.Router.map(function() {
   this.route('artists', { path: "/" })
 })
 
-S3Play.Audio = new Audio()
-
 S3Play.ArtistsRoute = Ember.Route.extend({
   setupController: function(controller, playlist) {
     S3.get_all(function(){
+      $(".loading_msg").remove()
       controller.set('dirs', S3.dirs)
     })
   },
@@ -31,10 +30,8 @@ S3Play.ArtistsRoute = Ember.Route.extend({
     change_artist: function(artist){
       var songs = this.find_songs(artist)
       S3Play.set("current_songs", songs)
-
-      tracks = "<div class='tracks'>"+$(".tracks").html()+"</div>"
-      $(".tracks").remove()
-      $("a[data-name='"+artist+"']").after(tracks)
+      this.render_tracks(artist)
+      this.adjust_scroll(artist)
     }
   },
   
@@ -44,40 +41,148 @@ S3Play.ArtistsRoute = Ember.Route.extend({
     return _(S3.songs).select(function(song){
       return song.dir == artist
     })
+  },
+  
+  render_tracks: function(artist) {
+    tracks = "<div class='tracks'>"+$(".tracks").html()+"</div>"
+    $(".tracks").remove()
+    $("a[data-name='"+artist+"']").after(tracks)
+  },
+  
+  adjust_scroll: function(artist){
+    // setTimeout(function(){
+      var extra_height = $(".player").outerHeight()
+      var extra_height2 = extra_height + $(".dir").outerHeight()
+      var div = $(".tracks")
+      $('html, body').animate({
+         scrollTop: div.offset().top - extra_height2
+       }, 10)
+    // }, 0)
   }
 })
 
 // S3Play.SongsRoute = Em.Route.extend({
 // })
 
-S3Play.SongsController = Ember.ArrayController.extend({
+S3Play.PlayerController = Em.Controller.extend({
   songsBinding: "S3Play.current_songs",
-  change: function(song){
-    console.log("play", song)
-    var audio = S3Play.Audio
-    audio.src = song.file
-    audio.play()
+  playing: false,
+  current: null,
+  song_nameBinding: 'current.name',
+  
+  init: function(){
+    this._super()
+    
+    var audio = new Audio()
+    // audio.addEventListener('ended', function() {
+    //   this.get('target').send('next')
+    // }.bind(this))
+    audio.addEventListener('timeupdate', function(){
+      this.update_slider_position()
+      // this.store_state()
+    }.bind(this))
 
-    // this.audio.play()
+    this.set('audio', audio)
+  },
+  
+  play_pause: function(){
+    if (this.get('playing')) {
+      this.pause()
+    } else {
+      this.play()
+    }
+  },
+  
+  play: function(){
+    if (!this.get('current'))
+      return
+      
+    this.get('audio').play()
+    this.set('playing', true)
+  },
+  
+  pause: function(){
+    this.get('audio').pause()
+    this.set('playing', false)
+  },
+
+  currentTrackChanged: function() {
+    var song = this.get('current')
+    this.get('audio').src = song.file
+    this.play()
+  }.observes('current'),
+
+  prev: function(){
+    if (!this.get('current'))
+      return
+    var songs = this.get('songs')
+    var index = songs.indexOf(this.get('current')) - 1
+    if (index < 0)
+      return
+    this.set('current', songs.objectAt(index))
+  },
+  
+  next: function(){
+    if (!this.get('current'))
+      return
+    var songs = this.get('songs')
+    var index = songs.indexOf(this.get('current')) + 1
+    if (index >= songs.length)
+      return
+    this.set('current', songs.objectAt(index))
+  },
+  
+  // sliders control | volume/seek
+  
+  set_current_time: function(){
+    var time = $(".current_time").val()
+    this.set('current_time', time)
+  },
+
+  set_volume: function(evt){
+    var volume = $(evt.target).val()
+    this.volume(volume)
+  },
+
+  volume_input: function(){ return $("input.volume").get(0) },
+  
+  current_time_input: function(){ 
+    return $("input.current_time").get(0) 
+  },
+
+  volume: function(vol) {
+    this.audio.volume = vol
+    this.volume_input().value = vol
+    localStorage.state_volume = vol
+  },
+
+  update_slider_position: function(evt){
+    var seekbar = this.current_time_input()
+    console.log("asd")
+    if (!this.get('audio').buffered.length)
+      return
+    seekbar.max = this.audio.duration
+    seekbar.value = this.audio.currentTime
+  },
+  
+  current_time_changed: function(){
+    this.get('audio').currentTime = this.get('time')
+  }.observes("current_time")
+})
+
+
+S3Play.SongsController = Ember.ArrayController.extend({
+  needs: 'player',
+  playerBinding: "controllers.player",
+  songsBinding: "S3Play.current_songs",
+  currentBinding: 'player.current',
+
+  change: function(song){
+    this.set('current', song)
   }
 })
 
 S3Play.current_songs = Em.A([])
-
-// S3Play.SongsView = Em.View.create({
-//   templateName: 'songs',
-//   change: function(evt){
-//     // S3Play.change_song(evt.context)
-//     console.log("changing song")
-//   }
-// })
-
-// rake routes: S3Play.Router.router.recognizer.names
-
-
-// this.playerView.appendTo("#s3play")
-// this.artistsView.replaceIn(".s3play_songs")
-
 
 $.get_cached = function(url, callback){
   // return $.get(url, callback)
@@ -192,41 +297,3 @@ var S3 = {
   }
   
 }
-
-// 
-// S3Play.Router.map(function() {
-//   this.route('library') // default route
-// });
-// 
-// 
-// 
-// S3Play.LibraryRoute = Ember.Route.extend({
-//   model: function() {
-//     var content = []
-// 
-//     var songs = [{ "name_short": "test" }, { "name_short": "test2" }];
-// 
-//     content.pushObjects(songs)
-// 
-//     return content
-//   }
-// });
-// 
-// 
-// S3Play.LibraryView = Em.View.extend({
-//   tagName: 'section',
-// 
-//   classNames: ['library']
-// });
-// 
-// S3Play.PlaylistTrackController = Em.ObjectController.extend({
-//   // needs: ['playlist'],
-// 
-//   // currentTrack: Em.computed.alias('controllers.playlist.currentTrack'),
-// 
-//   // current: function() {
-//   //   return this.get('content') === this.get('currentTrack');
-//   // }.property('content', 'currentTrack')
-// });
-// 
-// // playlistTrack

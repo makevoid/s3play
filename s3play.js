@@ -274,8 +274,9 @@ var S3Play = Em.Object.create({
       }
     })
 
-    var full = $(".song").length && artist == $(".song").data("artist")
     S3Play.artistsView.rerender()
+      
+    var full = $(".song").length && artist == $(".song").data("artist")
     setTimeout(function(){
       var extra_height = $(".player").outerHeight()
       var extra_height2 = extra_height + $(".dir").outerHeight()

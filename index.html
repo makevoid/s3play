@@ -41,14 +41,12 @@
         loading songs...
       {{/unless}}
       
-      {{view Ember.ContainerView currentViewBinding="S3Play.SongsView"}}
-      
       {{#each dirs}}
         <a href="javascript:void(0)" class="dir" {{bindAttr data-name="this"}} {{action "change_artist" this}}>{{this}}</a>
       {{/each}}
     </script>
     
-    <script type="text/x-handlebars" data-template-name="songs">              
+    <script type="text/x-handlebars" data-template-name="songs">
       {{#each songs}}
         <a href="javascript:void(0)" class="song" {{action "change" this}} {{bindAttr data-artist="dir"}}>{{name_short}}</a>
       {{/each}}
@@ -72,8 +70,10 @@
         <a class="download btn" {{bindAttr href="download"}}> ⇓ </a>
       </div>
     </script>
-     
   </head>
   <body>
+    <div class="loading_msg">
+      loading...
+    </div>
   </body>
 </html>
