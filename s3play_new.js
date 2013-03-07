@@ -1,6 +1,11 @@
 var S3Play = Em.Application.create({})
 window.S3Play = S3Play
 
+// iphone5 lolfix
+if (window.screen.height==568) { // iPhone 4"
+	document.querySelector("meta[name=viewport]").content="width=320.1"
+}
+
 var Conf = {
   bucket_name: "s3play"
 }
