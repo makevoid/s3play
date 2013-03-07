@@ -2,8 +2,8 @@ var S3Play = Em.Application.create({})
 window.S3Play = S3Play
 
 // iphone5 lolfix
-if (window.screen.height==568) { // iPhone 4"
-	document.querySelector("meta[name=viewport]").content="width=320.1"
+if (window.screen.height == 568) { // iPhone 4"
+	document.querySelector("meta[name=viewport]").content = "width=320.1"
 }
 
 var Conf = {
@@ -163,11 +163,11 @@ S3Play.PlayerController = Em.Controller.extend({
 
   update_slider_position: function(evt){
     var seekbar = this.current_time_input()
-    console.log("asd")
-    if (!this.get('audio').buffered.length)
+    var audio = this.get('audio')
+    if (!audio.buffered.length)
       return
-    seekbar.max = this.audio.duration
-    seekbar.value = this.audio.currentTime
+    seekbar.max = audio.duration
+    seekbar.value = audio.currentTime
   },
   
   current_time_changed: function(){
@@ -230,21 +230,19 @@ var S3 = {
     if (navigator.userAgent.match(/(iphone|android)/i)) {
       // this.max_song_limit = 500
     }
-  
-    var self = this
     
     var cb = function(data) {
       var last_item = _(data).last()
       // console.log(last_item)
       
       if (last_item) {
-        self.get_one(last_item, cb)
+        this.get_one(last_item, cb)
       } else {
         if (callback){
           callback()
         }
       }
-    }
+    }.bind(this)
 
     this.get_one(null, cb)
   },
@@ -266,7 +264,7 @@ var S3 = {
     var self = this
 
     files.every(function(file, idx){
-      // FIXME: where are edIT and hol baumann?
+      // FIXME: where is hol baumann?
       
       if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)){
         self.push_song(file)
