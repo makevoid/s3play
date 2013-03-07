@@ -248,34 +248,32 @@ var S3 = {
   },
 
   get_one: function(marker, callback){
-    var self = this
     return $.get_cached(this.s3_bucket_list(marker), function(data){
       
-      self.got_one(data)
+      this.got_one(data)
 
       if (callback) {
         callback(data)
       }
-    })
+    }.bind(this))
   },
 
   got_one: function(data, callback) {
     var files = data
-    var self = this
 
     files.every(function(file, idx){
       // FIXME: where is hol baumann?
       
       if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)){
-        self.push_song(file)
+        this.push_song(file)
       }else{
         // console.log("not audio: "+file)
       }
 
-      return idx < self.max_song_limit // prevent browser crash
-    })
+      return idx < this.max_song_limit // prevent browser crash
+    }.bind(this))
 
-    self.dirs = self.dirs.sort()
+    this.dirs = this.dirs.sort()
   },
 
   push_song: function(file){
@@ -287,15 +285,14 @@ var S3 = {
 
     var ext_regex = /\.(\w{3})$/
     var match = file.match(ext_regex)
-    var self = this
     if (match) {
       name = name.replace(ext_regex, '')
       name_short = name.replace(/(.+?) - /, '')
-      var song = { name: name, name_short: name_short, ext: match[1], file: self.s3_bucket_url+"/"+file, dir: dir }
+      var song = { name: name, name_short: name_short, ext: match[1], file: this.s3_bucket_url+"/"+file, dir: dir }
       
-      self.songs.push(song)
-      if ( !_(self.dirs).include(dir) )
-        self.dirs.push(dir)
+      this.songs.push(song)
+      if ( !_(this.dirs).include(dir) )
+        this.dirs.push(dir)
     }
   }
   
