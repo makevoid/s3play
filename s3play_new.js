@@ -144,21 +144,15 @@ S3Play.PlayerController = Em.Controller.extend({
     this.set('current_time', time)
   },
 
-  set_volume: function(evt){
-    var volume = $(evt.target).val()
-    this.volume(volume)
+  set_volume: function(){
+    var volume = $("input.volume").val()
+    this.set('volume', volume)
   },
 
   volume_input: function(){ return $("input.volume").get(0) },
   
   current_time_input: function(){ 
     return $("input.current_time").get(0) 
-  },
-
-  volume: function(vol) {
-    this.audio.volume = vol
-    this.volume_input().value = vol
-    localStorage.state_volume = vol
   },
 
   update_slider_position: function(evt){
@@ -171,8 +165,15 @@ S3Play.PlayerController = Em.Controller.extend({
   },
   
   current_time_changed: function(){
-    this.get('audio').currentTime = this.get('time')
-  }.observes("current_time")
+    this.get('audio').currentTime = this.get('current_time')
+  }.observes("current_time"),
+  
+  volume_changed: function() {
+    var vol = this.get('volume')
+    this.get('audio').volume = vol
+    this.volume_input().value = vol
+    localStorage.state_volume = vol
+  }.observes("volume")
 })
 
 
