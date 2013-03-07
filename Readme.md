@@ -34,26 +34,34 @@ This was made specifically for this ember FLOR talk: [florenceonruby.it/talks/7]
 
 stream: http://livestream.4ktech.net/channel/florence-on-ruby
 
-music by:
+music in the default bucket (s3play) by:
 - http://soundcloud.com/aritmiamusic
 - http://soundcloud.com/motionless-opaque
+- https://soundcloud.com/noumeno
+- https://soundcloud.com/draft_
+- https://soundcloud.com/adventureclubdubstep
 
 ---
 
+
+###
+
 ### TODO:
 
-- feature: save playlist in localstorage + reload button
+- feature: playlist localstorage reload button
 
 - feature: keybard events (space = pause/play)
 
 - feature: duplicate tracks removal
 
 - feature: player link and sync
-  - history .push and .replace state continuously to link the current song at the current timestamp + login to sync the players ;)
-
-
+  - history .push and .replace state continuously to link the current song at the current timestamp + login to sync the players ;) [ember routes?]
 
 - feature: remote control
+
+- appcache
+
+- iphone app with offline music cache
 
 - use svgs?
 
