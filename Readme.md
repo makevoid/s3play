@@ -50,6 +50,8 @@ to start the app in the development environment, there are many ways
 
 A) complete, using ruby (1.9+):
 
+complete means the 'guard tools' are run, see Guardfile for more info 
+
 install bundler gem and dependencies
 
     gem install bundler
@@ -101,6 +103,13 @@ C) otherwise you can use apache/nginx (or similar) and point it to the root fold
 list routes:
 
     S3Play.Router.router.recognizer.names
+
+## to try:
+
+{{#view 'songs'}}
+
+on click, render delle view
+
 
 ## Credits:
 

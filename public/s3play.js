@@ -211,7 +211,6 @@ S3Play.PlayerController = Em.Controller.extend({
       var song = this.find_song(localStorage.state_file)
       if (song) {
         song = Em.Object.create(song)
-        // console.log(song)
         this.set('current', song)
 
         if (!localStorage.state_playing)
@@ -220,18 +219,21 @@ S3Play.PlayerController = Em.Controller.extend({
         // time
         var time = localStorage.state_time
         var audio = this.get('audio')
-        
-        
         setTimeout(function(){
           if (time != 0) {
-            if (audio && audio.currentTime) {
+            set_time = _.once(function(){
               audio.currentTime = time
+            })
+            
+            if (audio){
+              set_time()
+            } else {
+              _.delay(set_time, 1000)
             }
           }
-        }.bind(this), 300) // TODO: fix this, out settimeout, call this when audio is present!!!!!!
+        }.bind(this), 300) // TODO: fix this, out settimeout, call this when audio is present! (defer?, $.when the two functions are done)
         
         // volume
-        // console.log(localStorage.state_volume)
         setTimeout(function(){
           this.set('volume', localStorage.state_volume)
         }.bind(this), 0)
@@ -299,7 +301,6 @@ var S3 = {
     
     var cb = function(data) {
       var last_item = _(data).last()
-      // console.log(last_item)
       
       if (last_item) {
         this.get_one(last_item, cb)
