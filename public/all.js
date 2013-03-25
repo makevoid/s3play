@@ -29336,19 +29336,18 @@ S3Play.PlayerController = Em.Controller.extend({
         // time
         var time = localStorage.state_time
         var audio = this.get('audio')
-        setTimeout(function(){
-          if (time != 0) {
-            set_time = _.once(function(){
-              audio.currentTime = time
-            })
-            
-            if (audio){
-              set_time()
-            } else {
-              _.delay(set_time, 1000)
-            }
+        if (time == 0)
+          return 
+       
+        var set_time = function() {
+          if (audio && audio.currentTime) {
+            audio.currentTime = time
+          } else {
+            _.delay(set_time, 100)
           }
-        }.bind(this), 300) // TODO: fix this, out settimeout, call this when audio is present! (defer?, $.when the two functions are done)
+        }
+        
+        set_time()
         
         // volume
         setTimeout(function(){
