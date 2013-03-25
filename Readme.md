@@ -7,6 +7,10 @@
 
 but you can fork the project and deploy your own!
 
+### Support:
+
+- Right now only webkit based browsers are supported (Chrome/Safari/iPhone/Android) because they can play mp3/flac with HTML5 audio.
+
 ---
 
 ### How to:
@@ -39,12 +43,13 @@ go to <http://s3play.makevoid.com?bucket=BUCKET_NAME> and enjoy your music!
 
 This was made specifically for this ember FLOR talk: [florenceonruby.it/talks/7](http://florenceonruby.it/talks/7)
 
+also I found it useful to upload all my music (and some friends music) on a/some s3 bucket(s) we only know the name(s) so I'm improving the player, I recently updated ember version
+
 stream: http://livestream.4ktech.net/channel/florence-on-ruby
 
 music in the default bucket (s3play) by:
 - http://soundcloud.com/aritmiamusic
 - http://soundcloud.com/motionless-opaque
-- https://soundcloud.com/noumeno
 - https://soundcloud.com/draft_
 - https://soundcloud.com/adventureclubdubstep
 
@@ -82,6 +87,10 @@ C) otherwise you can use apache/nginx (or similar) and point it to the root fold
 
 ### TODO:
 
+- support: flash fallback for firefox etc
+
+- UI need work, especially on mobile version
+
 - feature: playlist localstorage reload button
 
 - feature: keybard events (space = pause/play)
@@ -93,7 +102,9 @@ C) otherwise you can use apache/nginx (or similar) and point it to the root fold
 
 - feature: remote control
 
-- appcache
+- feature: search
+
+- appcache?
 
 - iphone app with offline music cache
 
@@ -115,7 +126,7 @@ list routes:
 
 {{#view 'songs'}}
 
-on click, render delle view
+on click, render delle view, tip by @nebulab
 
 
 ## Credits:
