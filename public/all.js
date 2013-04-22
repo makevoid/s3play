@@ -29341,7 +29341,7 @@ S3Play.PlayerController = Em.Controller.extend({
         var songs = S3Songs.find_songs(song.dir)
         S3Play.set("current_songs", songs)
         JQRender.render_tracks(song.dir)
-        JQRender.adjust_scroll(song.dir)
+        // JQRender.adjust_scroll(song.dir)
         this.set('current', song)
 
 
