@@ -29153,10 +29153,12 @@ JQRender = {
   adjust_scroll: function(artist){
     var extra_height = $(".player").outerHeight()
     var extra_height2 = extra_height + $(".dir").outerHeight()
-    var div = $(".tracks")
-    $('html, body').animate({
-       scrollTop: div.offset().top - extra_height2
-     }, 10)
+    setTimeout(function(){
+      var div = $(".tracks")
+      $('html, body').animate({
+         scrollTop: div.offset().top - extra_height2
+       }, 10)
+    }, 0)
   }
 }
 
@@ -29341,7 +29343,7 @@ S3Play.PlayerController = Em.Controller.extend({
         var songs = S3Songs.find_songs(song.dir)
         S3Play.set("current_songs", songs)
         JQRender.render_tracks(song.dir)
-        // JQRender.adjust_scroll(song.dir)
+        JQRender.adjust_scroll(song.dir)
         this.set('current', song)
 
 
