@@ -31,6 +31,15 @@ JQRender = {
       $(".tracks").remove()
       $("a[data-name='"+artist+"']").after(tracks)
     }, 0)
+  }, 
+  
+  adjust_scroll: function(artist){
+    var extra_height = $(".player").outerHeight()
+    var extra_height2 = extra_height + $(".dir").outerHeight()
+    var div = $(".tracks")
+    $('html, body').animate({
+       scrollTop: div.offset().top - extra_height2
+     }, 10)
   }
 }
 
@@ -58,20 +67,8 @@ S3Play.ArtistsRoute = Ember.Route.extend({
       S3Play.set("current_songs", songs)
       // this.render_tracks(artist)
       JQRender.render_tracks(artist)
-      this.adjust_scroll(artist)
+      JQRender.adjust_scroll(artist)
     }
-  },
-  
-  // non ember methods
-
-  
-  adjust_scroll: function(artist){
-    var extra_height = $(".player").outerHeight()
-    var extra_height2 = extra_height + $(".dir").outerHeight()
-    var div = $(".tracks")
-    $('html, body').animate({
-       scrollTop: div.offset().top - extra_height2
-     }, 10)
   }
 })
 
@@ -227,6 +224,7 @@ S3Play.PlayerController = Em.Controller.extend({
         var songs = S3Songs.find_songs(song.dir)
         S3Play.set("current_songs", songs)
         JQRender.render_tracks(song.dir)
+        JQRender.adjust_scroll(song.dir)
         this.set('current', song)
 
 
