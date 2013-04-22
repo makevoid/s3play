@@ -1,4 +1,4 @@
-# S3Play
+# S3Play - http://s3play.it
 ### Ember app to play audio files directly from s3
 
 ### Deployed version:

@@ -29140,6 +29140,25 @@ S3Play.Router.map(function() {
   this.route('artists', { path: "/" })
 })
 
+JQRender = {
+  render_tracks: function(artist) {
+    var artist = artist
+    setTimeout(function(){
+      var tracks = "<section class='tracks'>"+$(".tracks").html()+"</section>"
+      $(".tracks").remove()
+      $("a[data-name='"+artist+"']").after(tracks)
+    }, 0)
+  }
+}
+
+S3Songs = {
+  find_songs: function(artist) {
+    return _(S3.songs).select(function(song){
+      return song.dir == artist
+    })
+  }
+}
+
 S3Play.ArtistsRoute = Ember.Route.extend({
   
   setupController: function(controller, playlist) {
@@ -29152,26 +29171,16 @@ S3Play.ArtistsRoute = Ember.Route.extend({
   
   events: {
     change_artist: function(artist){
-      var songs = this.find_songs(artist)
+      var songs = S3Songs.find_songs(artist)
       S3Play.set("current_songs", songs)
-      this.render_tracks(artist)
+      // this.render_tracks(artist)
+      JQRender.render_tracks(artist)
       this.adjust_scroll(artist)
     }
   },
   
   // non ember methods
-  
-  find_songs: function(artist) {
-    return _(S3.songs).select(function(song){
-      return song.dir == artist
-    })
-  },
-  
-  render_tracks: function(artist) {
-    tracks = "<div class='tracks'>"+$(".tracks").html()+"</div>"
-    $(".tracks").remove()
-    $("a[data-name='"+artist+"']").after(tracks)
-  },
+
   
   adjust_scroll: function(artist){
     var extra_height = $(".player").outerHeight()
@@ -29327,8 +29336,16 @@ S3Play.PlayerController = Em.Controller.extend({
     if (localStorage && localStorage.state_time) {
       var song = this.find_song(localStorage.state_file)
       if (song) {
-        song = Em.Object.create(song)
+        var song = _(S3.songs).find(function(song){
+          return song.file == localStorage.state_file
+        })
+        
+        // FIXME: refactor, duplication in ArtistsRoute.events.change_artist
+        var songs = S3Songs.find_songs(song.dir)
+        S3Play.set("current_songs", songs)
+        JQRender.render_tracks(song.dir)
         this.set('current', song)
+
 
         if (!localStorage.state_playing)
           this.pause()
@@ -29445,11 +29462,11 @@ var S3 = {
     var files = data
 
     files.every(function(file, idx){
-      // FIXME: where is hol baumann?
+      // FIXME: where is hol baumann? (mkvmusic bucket)
       
-      if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)){
+      if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)) {
         this.push_song(file)
-      }else{
+      } else {
         // console.log("not audio: "+file)
       }
 
