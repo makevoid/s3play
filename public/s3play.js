@@ -31,8 +31,8 @@ JQRender = {
       $(".tracks").remove()
       $("a[data-name='"+artist+"']").after(tracks)
     }, 0)
-  }, 
-  
+  },
+
   adjust_scroll: function(artist){
     var extra_height = $(".player").outerHeight()
     var extra_height2 = extra_height + $(".dir").outerHeight()
@@ -54,7 +54,7 @@ S3Songs = {
 }
 
 S3Play.ArtistsRoute = Ember.Route.extend({
-  
+
   setupController: function(controller, playlist) {
     S3.get_all(function(){
       $(".loading_msg").remove()
@@ -62,7 +62,7 @@ S3Play.ArtistsRoute = Ember.Route.extend({
       controller.songs_loadeds()
     })
   },
-  
+
   events: {
     change_artist: function(artist){
       var songs = S3Songs.find_songs(artist)
@@ -77,7 +77,7 @@ S3Play.ArtistsRoute = Ember.Route.extend({
 S3Play.ArtistsController = Em.Controller.extend({
   needs: ['player'],
   playerBinding: 'controllers.player',
-  
+
   songs_loadeds: function(){
     this.player.restore_state()
   }
@@ -91,41 +91,42 @@ S3Play.PlayerController = Em.Controller.extend({
   playing: false,
   current: null,
   song_nameBinding: 'current.name',
-  
+
   init: function(){
     this._super()
-    
+
     var audio = new Audio()
-    
+
     audio.addEventListener('ended', function() {
       this.send('next')
     }.bind(this))
-    
+
     audio.addEventListener('timeupdate', function(){
-      // todo: _ throttle or similar
+      // TODO: _ throttle !!!
       this.update_slider_position()
       this.store_state()
     }.bind(this))
 
     this.set('audio', audio)
   },
-  
+
   play_pause: function(){
     if (this.get('playing')) {
       this.pause()
     } else {
       this.play()
     }
+    this.store_state()
   },
-  
+
   play: function(){
     if (!this.get('current'))
       return
-      
+
     this.get('audio').play()
     this.set('playing', true)
   },
-  
+
   pause: function(){
     this.get('audio').pause()
     this.set('playing', false)
@@ -147,7 +148,7 @@ S3Play.PlayerController = Em.Controller.extend({
       return
     this.set('current', songs.objectAt(index))
   },
-  
+
   next: function(){
     if (!this.get('current'))
       return
@@ -157,9 +158,9 @@ S3Play.PlayerController = Em.Controller.extend({
       return
     this.set('current', songs.objectAt(index))
   },
-  
+
   // sliders control | volume/seek
-  
+
   set_current_time: function(){
     var time = $(".current_time").val()
     this.set('current_time', time)
@@ -171,35 +172,35 @@ S3Play.PlayerController = Em.Controller.extend({
   },
 
   volume_input: function(){ return $("input.volume").get(0) },
-  
-  current_time_input: function(){ 
-    return $("input.current_time").get(0) 
+
+  current_time_input: function(){
+    return $("input.current_time").get(0)
   },
 
   update_slider_position: function(evt){
     var seekbar = this.current_time_input()
-    var audio = this.get('audio')    
+    var audio = this.get('audio')
     if (!audio.buffered.length)
       return
     seekbar.max = audio.duration
     seekbar.value = audio.currentTime
   },
-  
+
   current_time_changed: function(){
     if (!this.get('audio').buffered.length)
       return
     this.get('audio').currentTime = this.get('current_time')
   }.observes("current_time"),
-  
+
   volume_changed: function() {
     var vol = this.get('volume')
     this.get('audio').volume = vol
     this.volume_input().value = vol
     localStorage.state_volume = vol
   }.observes("volume"),
-  
+
   // manage player state + localStorage persistance
-  
+
   store_state: function(evt){
     var audio = this.get('audio')
     localStorage.state_time     = audio.currentTime
@@ -221,7 +222,7 @@ S3Play.PlayerController = Em.Controller.extend({
         var song = _(S3.songs).find(function(song){
           return song.file == localStorage.state_file
         })
-        
+
         // FIXME: refactor, duplication in ArtistsRoute.events.change_artist
         var songs = S3Songs.find_songs(song.dir)
         S3Play.set("current_songs", songs)
@@ -229,16 +230,16 @@ S3Play.PlayerController = Em.Controller.extend({
         JQRender.adjust_scroll(song.dir)
         this.set('current', song)
 
-
-        if (!localStorage.state_playing)
+        var isPlaying = localStorage.state_playing == "true"
+        if (!isPlaying)
           this.pause()
-        
+
         // time
         var time = localStorage.state_time
         var audio = this.get('audio')
         if (time == 0)
-          return 
-       
+          return
+
         var set_time = function() {
           if (audio && audio.currentTime) {
             audio.currentTime = time
@@ -246,9 +247,9 @@ S3Play.PlayerController = Em.Controller.extend({
             _.delay(set_time, 100)
           }
         }
-        
+
         set_time()
-        
+
         // volume
         setTimeout(function(){
           this.set('volume', localStorage.state_volume)
@@ -256,7 +257,7 @@ S3Play.PlayerController = Em.Controller.extend({
       }
     }
   }
-  
+
 })
 
 
@@ -288,21 +289,21 @@ $.get_cached = function(url, callback){
 }
 
 var S3 = {
-  
+
   songs: [],
   dirs: [],
-  
+
   max_song_limit: 100000,
-  
+
   s3_bucket_url: "http://"+Conf.bucket_name+".s3.amazonaws.com",
-  
+
   // helpers
-  
+
   s3_bucket_list: function(last_marker){
     marker = ""
     if (last_marker)
       marker = "?marker="+last_marker
-    return this.s3_bucket_url+marker  
+    return this.s3_bucket_url+marker
   },
 
   // Ajax
@@ -314,10 +315,10 @@ var S3 = {
     if (navigator.userAgent.match(/(iphone|android)/i)) {
       // this.max_song_limit = 500
     }
-    
+
     var cb = function(data) {
       var last_item = _(data).last()
-      
+
       if (last_item) {
         this.get_one(last_item, cb)
       } else {
@@ -332,7 +333,7 @@ var S3 = {
 
   get_one: function(marker, callback){
     return $.get_cached(this.s3_bucket_list(marker), function(data){
-      
+
       this.got_one(data)
 
       if (callback) {
@@ -346,7 +347,7 @@ var S3 = {
 
     files.every(function(file, idx){
       // FIXME: where is hol baumann? (mkvmusic bucket)
-      
+
       if (file.match(/(\/|mp3|ogg|flac|m4a|wav|m3u|au|snd|mid|rmi|aif|aifc|aiff|ra|ram)$/i)) {
         this.push_song(file)
       } else {
@@ -372,11 +373,11 @@ var S3 = {
       name = name.replace(ext_regex, '')
       name_short = name.replace(/(.+?) - /, '')
       var song = { name: name, name_short: name_short, ext: match[1], file: this.s3_bucket_url+"/"+file, dir: dir }
-      
+
       this.songs.push(song)
       if ( !_(this.dirs).include(dir) )
         this.dirs.push(dir)
     }
   }
-  
+
 }
