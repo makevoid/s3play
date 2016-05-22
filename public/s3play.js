@@ -1,6 +1,8 @@
 var S3Play = Em.Application.create({})
 window.S3Play = S3Play
 
+// TODO: add feature - playlist updated at - localStorage.playlist_updated_at
+
 // iphone5 lolfix
 if (window.screen.height == 568) { // iPhone 4"
 	document.querySelector("meta[name=viewport]").content = "width=320.1"
@@ -11,10 +13,22 @@ var Conf = {
 }
 
 var set_bucket_from_url = function(){
-  var split = location.search.replace(/\?/, '').split(/bucket=/)
-  if (split && split[1]) {
-    Conf.bucket_name = split[1]
+  var bucket;
+
+  var subHost = s(location.host).strLeft(".").value()
+
+  if (subHost != "localhost" || subHost != "s3play") {
+    bucket = subHost // bucket name is 2nd-level domain name
+  } else {
+    // old type url
+    var split = location.search.replace(/\?/, '').split(/bucket=/)
+    if (split && split[1]) {
+      bucket
+    }
+    bucket = split[1]
   }
+
+  Conf.bucket_name = bucket
 }
 
 set_bucket_from_url()

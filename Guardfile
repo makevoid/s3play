@@ -3,7 +3,7 @@
 # in this project it will be used to concatenate files js and for the browser plugin livereload (autorefreshes the browser)
 
 # This will concatenate the javascript files specified in :files to public/all.js
-guard :concat, type: "js", files: %w(vendor/jquery vendor/handlebars vendor/ember vendor/underscore vendor/jquery-ajax-localstorage-cache s3play), input_dir: "public", output: "public/all"
+guard :concat, type: "js", files: %w(vendor/jquery vendor/handlebars vendor/ember vendor/underscore vendor/underscore.string vendor/jquery-ajax-localstorage-cache s3play), input_dir: "public", output: "public/all"
 
 
 # TODO: fork guard-minify, fix it, email Simon and then ask him to merge and publish the rubygem
