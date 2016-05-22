@@ -1,5 +1,17 @@
 # S3Play - http://s3play.it
-### Ember app to play audio files directly from s3
+
+### Target:
+
+- integrate digital currencies
+- make this into IPFSPlay
+
+
+### TODO list (near future)
+
+- localstorage clear
+- loop
+- ui
+
 
 ### Deployed version:
 
@@ -62,7 +74,7 @@ to start the app in the development environment, there are many ways
 
 A) complete, using ruby (1.9+):
 
-complete means the 'guard tools' are run, see Guardfile for more info 
+complete means the 'guard tools' are run, see Guardfile for more info
 
 install bundler gem and dependencies
 
@@ -81,9 +93,9 @@ B) use python simple http server:
 
 in both cases go to <http://localhost:3000> and you should see S3Play on the default bucket!
 
-C) otherwise you can use apache/nginx (or similar) and point it to the root folder 
-    
-    
+C) otherwise you can use apache/nginx (or similar) and point it to the root folder
+
+
 
 ### TODO:
 
@@ -115,7 +127,7 @@ C) otherwise you can use apache/nginx (or similar) and point it to the root fold
       points="0,0 100,50 0,100"
       style="fill: green;"/>
     </svg>
-    
+
 ## notes:
 
 list routes:
