@@ -15,9 +15,18 @@
 
 ### Deployed version:
 
-[s3play.makevoid.com](http://s3play.makevoid.com)
+
+usage: create an s3bucket with a special/non guessable name, upload songs in s3 bucket, add cors policy, 
+go to address  BUCKETNAME.s3play.it and you're done!
+
+[BUCKETNAME.s3play.it](http://s3play.it)
 
 but you can fork the project and deploy your own!
+
+This version is simplistic and it doesn't have a public blockchain bitcoin integration like github.com/makevoid/s3play_v2! the road is very long to have a v2 version fully worked, but (still on the v2 version) there is this code (s3play version 1, this repo) modularized.
+
+author note: we'll see, as this is a side project and I'm pretty busy right now I can't really finish it even if I use this app everyday and I would like to integrate something like ipfs after s3 + blockchain (save s3play links / hashes of the song into the blockchain) + optional hash of the user reference (needs A/B testing)
+
 
 ### Support:
 
